@@ -21,7 +21,8 @@ export const leadership: TeamMember[] = [
     name: "Muhammad Nadir",
     role: "Founder & CEO",
     category: "CEO",
-    department: "Executive",
+    department: "",
+
     image: Image,
     description: "Visionary leader driving innovation and strategic excellence",
     social: { linkedin: "#", email: "#" },
@@ -32,7 +33,8 @@ export const leadership: TeamMember[] = [
     name: "Sajideen Hassan",
     role: "CTO",
     category: "CTO",
-    department: "Engineering",
+    department: "",
+
     image: CTO,
     description: "Technology strategy and engineering leadership",
     social: { linkedin: "#" },
@@ -43,7 +45,8 @@ export const leadership: TeamMember[] = [
     name: "Muhammad Moazzam",
     role: "CFO",
     category: "CFO",
-    department: "Finance",
+    department: "",
+
     image: CFO,
     description: "Financial planning and business growth",
     social: { linkedin: "#" },
@@ -54,7 +57,8 @@ export const leadership: TeamMember[] = [
     name: "Shamin Gull",
     role: "COO",
     category: "COO",
-    department: "Operations",
+    department: "",
+
     image: COO,
     description: "Operations and execution excellence",
     social: { linkedin: "#" },

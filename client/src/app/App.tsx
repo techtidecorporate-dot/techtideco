@@ -9,6 +9,8 @@ import CareerPage from "./pages/career";
 import ContactPage from "./pages/contact";
 import SignInPage from "./components/ui/signin";
 import { AuthProvider } from "./context/AuthContext";
+import { ScrollToTop } from "./components/ui/ScrollToTop";
+
 import AdminLayout from "./pages/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import TeamManagement from "./pages/admin/Teams";
@@ -26,6 +28,7 @@ export default function App() {
 
   return (
     <AuthProvider>
+      <ScrollToTop />
       <div className="min-h-screen bg-white">
         {!hideNavFooter && <Navbar />}
         <Routes>

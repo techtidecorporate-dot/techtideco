@@ -14,7 +14,11 @@ function ServiceCard({ title, description, image }: ServiceCardProps) {
     <div className="bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden">
       {/* Image */}
       <div className="relative h-[180px] m-4 rounded-lg overflow-hidden">
-        <img alt={title} className="w-full h-full object-cover" src={image} />
+        <img
+          alt={`Illustration of ${title} services`}
+          className="w-full h-full object-cover"
+          src={image}
+        />
       </div>
 
       {/* Content */}

@@ -1,27 +1,46 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import imgBilal from "@/assets/review2.png";
-import imgSarah from "@/assets/review2.png";
-import imgJohn from "@/assets/review2.png";
+import imgNadir from "@/assets/nadir.png";
+import imgMoazzam from "@/assets/Moazzam.png";
+import imgSajid from "@/assets/sajideen.png";
+import imgAmmar from "@/assets/Muhammad Ammar Haider.png";
+import imgShamin from "@/assets/Shamin.png";
 
 const leaders = [
   {
-    name: "Mr. Muhammad Nadir",
+    name: "Muhammad Nadir",
     role: "CEO & Founder",
-    image: imgBilal,
-    message: `Techtide was founded on a vision that goes beyond the balance sheet. We are committed to achieving commercial excellence, but our ultimate mandate is to fuel Pakistan's future. Every successful project with Techtide directly funds youth employment, educational initiatives, and sustainable charity chains. Our success is our nation's progress. We invite you to partner with purpose.`,
+    image: imgNadir,
+    message:
+      "Techtide exists to build profitable technology while empowering Pakistan’s youth through jobs, education, and sustainable initiatives, turning every successful project into measurable national progress together.",
   },
   {
-    name: "Ms. Sarah Khan",
+    name: "Muhammad Moazzam",
     role: "COO",
-    image: imgSarah,
-    message: `Sarah leads operational excellence across all departments, ensuring smooth processes and high performance.`,
+    image: imgMoazzam,
+    message:
+      "Moazzam ensures operational excellence by aligning teams, optimizing processes, and delivering projects efficiently, on time, and at scale while maintaining quality, accountability, and continuous improvement.",
   },
   {
-    name: "Mr. John Doe",
+    name: "Sajideen Hassan",
     role: "CTO",
-    image: imgJohn,
-    message: `John drives technological innovation, building robust systems that empower the business.`,
+    image: imgSajid,
+    message:
+      "Sajideen leads our technology vision, designing secure, scalable systems, driving innovation, and enabling teams to deliver reliable products using modern architectures and forward-thinking engineering practices.",
+  },
+  {
+    name: "Shamin Gull",
+    role: "Operations Manager",
+    image: imgShamin,
+    message:
+      "Shamin manages daily operations and projects, coordinating teams, timelines, and resources to ensure consistent execution, risk control, and precise delivery across all organizational functions companywide.",
+  },
+  {
+    name: "Muhammad Ammar",
+    role: "Digital Marketing Head",
+    image: imgAmmar,
+    message:
+      "Ammar leads digital marketing strategy, strengthening brand presence, generating demand, and connecting our solutions with global audiences through data-driven campaigns and performance-focused growth initiatives worldwide.",
   },
 ];
 
@@ -47,33 +66,33 @@ export function LeadershipSection() {
         </span>
       </h2>
 
-      <div className="relative max-w-7xl mx-auto px-6 md:px-8 flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
+      <div className="relative max-w-7xl mx-auto px-6 md:px-8 flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-28">
         {/* Text Section */}
-        <div className="flex-1 max-w-full lg:max-w-[600px] text-center lg:text-left">
+        <div className="flex-1 max-w-full lg:max-w-[500px] text-center lg:text-left">
           <h3
-            className="text-2xl md:text-4xl font-bold bg-clip-text mb-4 leading-tight"
+            className="text-4xl md:text-5xl font-bold mb-2 leading-tight"
             style={{
               WebkitTextFillColor: "transparent",
               backgroundImage:
                 "linear-gradient(95.6204deg, rgb(69, 58, 188) 0%, rgb(96, 195, 227) 103.41%)",
+              backgroundClip: "text",
             }}
           >
-            {leaders[current].role} <br /> {leaders[current].name}
+            {leaders[current].name}
           </h3>
-          <p className="text-[#374151] mb-8 leading-relaxed italic md:not-italic">
-            "{leaders[current].message}"
+          <p className="text-xl md:text-2xl font-semibold text-gray-800 mb-6 uppercase tracking-wide">
+            {leaders[current].role}
           </p>
-
-          <div className="flex justify-center lg:justify-start gap-4 mb-8">
-            <button className="p-3 rounded-full bg-gray-50 hover:bg-gray-200 transition-colors">
-              <i className="fab fa-facebook-f text-[#453abc]" />
-            </button>
-            <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
-              <i className="fab fa-instagram text-[#453abc]" />
-            </button>
-            <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
-              <i className="fas fa-envelope text-[#453abc]" />
-            </button>
+          <div className="relative mb-10">
+            <span className="absolute -left-6 -top-4 text-4xl text-[#453abc] opacity-20 font-serif">
+              "
+            </span>
+            <p className="text-[#4b5563] text-lg leading-relaxed italic">
+              {leaders[current].message}
+            </p>
+            <span className="absolute -right-2 -bottom-4 text-4xl text-[#453abc] opacity-20 font-serif">
+              "
+            </span>
           </div>
 
           <button className="px-8 py-3 bg-[#4b49c6] text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 active:translate-y-0 transition-all font-medium">
@@ -82,48 +101,70 @@ export function LeadershipSection() {
         </div>
 
         {/* Image Section */}
-        <div className="flex-1 relative w-full max-w-[280px] md:max-w-sm h-[350px] md:h-[500px] perspective-1000">
+        <div className="flex-1 relative w-full max-w-[200px] md:max-w-sm h-[350px] md:h-[500px] perspective-1000">
           {leaders.map((leader, index) => {
             const position =
               (index - current + leaders.length) % leaders.length;
 
-            // Front leader = 0, middle = 1, back = 2
+            // Position logic for 5 elements
             let xOffset = 0;
             let scale = 1;
             let blur = "0px";
             let rotateY = 0;
             let zIndex = 20;
+            let opacity = 0;
 
-            if (position === 1) {
-              xOffset = 60; // Reduced for mobile
-              scale = 0.85;
-              blur = "2px";
-              rotateY = -15;
-              zIndex = 10;
-            } else if (position === 2) {
-              xOffset = -60; // Reduced for mobile
-              scale = 0.85;
-              blur = "2px";
-              rotateY = 15;
+            if (position === 0) {
+              // Center/Front - Crystal Clear
+              xOffset = 0;
+              scale = 1;
+              zIndex = 30;
+              opacity = 1;
+              blur = "0px";
+            } else if (position === 1) {
+              // Right side - Blurred
+              xOffset = 220;
+              scale = 0.75;
+              rotateY = -25;
+              zIndex = 20;
+              opacity = 0.4;
+              blur = "12px";
+            } else if (position === 4) {
+              // Left side - Blurred
+              xOffset = -220;
+              scale = 0.75;
+              rotateY = 25;
+              zIndex = 20;
+              opacity = 0.4;
+              blur = "12px";
+            } else {
+              // In the back - Completely hidden and scaled to zero
+              xOffset = 0;
+              scale = 0;
               zIndex = 5;
+              opacity = 0;
+              blur = "0px";
             }
 
             return (
               <motion.img
                 key={leader.name}
                 src={leader.image}
-                alt={leader.name}
+                alt={`Photo of ${leader.name}, ${leader.role} at Techtide`}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{
-                  opacity: position === 0 ? 1 : 0.6,
+                  opacity,
                   scale,
                   x: xOffset,
                   zIndex,
                   filter: `blur(${blur})`,
                   rotateY,
                 }}
-                transition={{ duration: 0.8 }}
-                className="absolute top-0 left-0 w-full h-[300px] md:h-[400px] object-contain object-top rounded-3xl"
+                transition={{
+                  duration: 0.8,
+                  ease: "easeInOut",
+                }}
+                className="absolute top-0 left-0 w-full h-[300px] md:h-[400px] object-contain object-top pointer-events-none"
               />
             );
           })}

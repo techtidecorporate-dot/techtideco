@@ -1,16 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Code, TrendingUp, Users } from "lucide-react";
+import { Code, TrendingUp, Users, Loader2 } from "lucide-react";
 import LeaderCard from "@/app/components/team/LeaderCard";
 import TeamMemberCard from "@/app/components/team/TeamMemberCard";
-import {
-  leadership,
-  developmentTeam,
-  marketingTeam,
-} from "@/app/components/team/teamData";
+import { teamAPI, TeamMember } from "@/api";
 
 const TeamOption1 = () => {
   const [activeTab, setActiveTab] = useState("all");
+  const [teams, setTeams] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const { data } = await teamAPI.getAll();
+        setTeams(data);
+      } catch (error) {
+        console.error("Failed to fetch team data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTeams();
+  }, []);
+
+  // Categorization logic
+  const ceo = teams.find((m) => m.category === "CEO");
+  const executives = teams.filter((m) =>
+    ["CTO", "CFO", "COO", "Executive Leadership"].includes(m.category)
+  );
+
+  const getDepartmentData = (dept: string) => {
+    const deptMembers = teams.filter((m) => m.department === dept);
+    return {
+      head: deptMembers.filter((m) => m.category === "Head"),
+      senior: deptMembers.filter((m) => m.category === "Senior"),
+      junior: deptMembers.filter((m) => m.category === "Junior"),
+      intern: deptMembers.filter((m) => m.category === "Intern"),
+    };
+  };
+
+  const devTeam = getDepartmentData("Development");
+  const mktTeam = getDepartmentData("Marketing");
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f8f9fa]">
+        <Loader2 className="w-12 h-12 text-[#453abc] animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f8f9fa] to-[#eef2f7] font-inter mt-10 pb-16">
@@ -44,32 +83,36 @@ const TeamOption1 = () => {
         {/* Leadership Section */}
         <div className="mb-20 mt-16">
           {/* CEO Section */}
-          <div className="mb-16">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-2 h-8 bg-gradient-to-b from-blue-600 to-purple-600 rounded-full"></div>
-              <h2 className="text-3xl font-poppins text-gray-800">
-                Chief Executive Officer
-              </h2>
+          {ceo && (
+            <div className="mb-16">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-2 h-8 bg-gradient-to-b from-blue-600 to-purple-600 rounded-full"></div>
+                <h2 className="text-3xl font-poppins text-gray-800">
+                  Chief Executive Officer
+                </h2>
+              </div>
+              <div className="flex justify-center">
+                <LeaderCard member={ceo} isCEO={true} />
+              </div>
             </div>
-            <div className="flex justify-center">
-              <LeaderCard member={leadership[0]} isCEO={true} />
-            </div>
-          </div>
+          )}
 
           {/* C-Suite Section */}
-          <div>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-2 h-8 bg-gradient-to-b from-blue-600 to-purple-600 rounded-full"></div>
-              <h2 className="text-3xl font-bold text-gray-800">
-                Executive Leadership
-              </h2>
+          {executives.length > 0 && (
+            <div>
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-2 h-8 bg-gradient-to-b from-blue-600 to-purple-600 rounded-full"></div>
+                <h2 className="text-3xl font-bold text-gray-800">
+                  Executive Leadership
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
+                {executives.map((member, i) => (
+                  <LeaderCard key={i} member={member} isCEO={false} />
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
-              {leadership.slice(1).map((member, i) => (
-                <LeaderCard key={i} member={member} isCEO={false} />
-              ))}
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Department Tabs */}
@@ -127,38 +170,34 @@ const TeamOption1 = () => {
             className="space-y-20"
           >
             {/* Head Section */}
-            {(activeTab === "marketing" ||
-              activeTab === "all" ||
-              activeTab === "development") && (
-              <div className="space-y-8">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-8 bg-gradient-to-b from-orange-500 to-pink-600 rounded-full" />
-                  <h2 className="text-3xl font-poppins font-semibold text-gray-800">
-                    Head
-                  </h2>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center max-w-4xl mx-auto">
-                  {/* Development Head (Mubashir) */}
-                  {(activeTab === "development" || activeTab === "all") &&
-                    developmentTeam.head.map((member, i) => (
-                      <LeaderCard
-                        key={`dev-head-${i}`}
-                        member={member}
-                        isCEO={false}
-                      />
-                    ))}
-                  {/* Marketing Head (Ammar) */}
-                  {(activeTab === "marketing" || activeTab === "all") &&
-                    marketingTeam.head.map((member, i) => (
-                      <LeaderCard
-                        key={`mark-head-${i}`}
-                        member={member}
-                        isCEO={false}
-                      />
-                    ))}
-                </div>
+            <div className="space-y-8">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-8 bg-gradient-to-b from-orange-500 to-pink-600 rounded-full" />
+                <h2 className="text-3xl font-poppins font-semibold text-gray-800">
+                  Head
+                </h2>
               </div>
-            )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center max-w-4xl mx-auto">
+                {/* Development Head */}
+                {(activeTab === "development" || activeTab === "all") &&
+                  devTeam.head.map((member, i) => (
+                    <LeaderCard
+                      key={`dev-head-${i}`}
+                      member={member}
+                      isCEO={false}
+                    />
+                  ))}
+                {/* Marketing Head */}
+                {(activeTab === "marketing" || activeTab === "all") &&
+                  mktTeam.head.map((member, i) => (
+                    <LeaderCard
+                      key={`mark-head-${i}`}
+                      member={member}
+                      isCEO={false}
+                    />
+                  ))}
+              </div>
+            </div>
 
             {/* Senior Section */}
             <div className="space-y-8">
@@ -169,18 +208,16 @@ const TeamOption1 = () => {
                 </h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-items-center gap-8">
-                {/* Development Seniors (Bilal, Hammad) */}
                 {(activeTab === "development" || activeTab === "all") &&
-                  developmentTeam.senior.map((member, i) => (
+                  devTeam.senior.map((member, i) => (
                     <TeamMemberCard
                       key={`dev-sr-${i}`}
                       member={member}
                       color="blue"
                     />
                   ))}
-                {/* Marketing Senior (Aresha) */}
                 {(activeTab === "marketing" || activeTab === "all") &&
-                  marketingTeam.senior.map((member, i) => (
+                  mktTeam.senior.map((member, i) => (
                     <TeamMemberCard
                       key={`mark-sr-${i}`}
                       member={member}
@@ -199,18 +236,16 @@ const TeamOption1 = () => {
                 </h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-items-center gap-8">
-                {/* Development Juniors (Ali, Mahmood, Mashood) */}
                 {(activeTab === "development" || activeTab === "all") &&
-                  developmentTeam.junior.map((member, i) => (
+                  devTeam.junior.map((member, i) => (
                     <TeamMemberCard
                       key={`dev-jr-${i}`}
                       member={member}
                       color="blue"
                     />
                   ))}
-                {/* Marketing Junior (Amna, Saira) */}
                 {(activeTab === "marketing" || activeTab === "all") &&
-                  marketingTeam.junior.map((member, i) => (
+                  mktTeam.junior.map((member, i) => (
                     <TeamMemberCard
                       key={`mark-jr-${i}`}
                       member={member}
@@ -221,41 +256,36 @@ const TeamOption1 = () => {
             </div>
 
             {/* Intern Section */}
-            {((activeTab === "development" &&
-              developmentTeam.intern.length > 0) ||
-              (activeTab === "marketing" && marketingTeam.intern.length > 0) ||
-              (activeTab === "all" &&
-                (developmentTeam.intern.length > 0 ||
-                  marketingTeam.intern.length > 0))) && (
-              <div className="space-y-8">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-8 bg-gradient-to-b from-blue-400 to-purple-400 rounded-full" />
-                  <h2 className="text-3xl font-poppins font-semibold text-gray-800">
-                    Intern
-                  </h2>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-items-center gap-8">
-                  {/* Development Interns (Ayesha) */}
-                  {(activeTab === "development" || activeTab === "all") &&
-                    developmentTeam.intern.map((member, i) => (
-                      <TeamMemberCard
-                        key={`dev-int-${i}`}
-                        member={member}
-                        color="blue"
-                      />
-                    ))}
-                  {/* Marketing Interns */}
-                  {(activeTab === "marketing" || activeTab === "all") &&
-                    marketingTeam.intern.map((member, i) => (
-                      <TeamMemberCard
-                        key={`mark-int-${i}`}
-                        member={member}
-                        color="orange"
-                      />
-                    ))}
-                </div>
-              </div>
-            )}
+            <div className="space-y-8">
+              {(devTeam.intern.length > 0 || mktTeam.intern.length > 0) && (
+                <>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-8 bg-gradient-to-b from-blue-400 to-purple-400 rounded-full" />
+                    <h2 className="text-3xl font-poppins font-semibold text-gray-800">
+                      Intern
+                    </h2>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-items-center gap-8">
+                    {(activeTab === "development" || activeTab === "all") &&
+                      devTeam.intern.map((member, i) => (
+                        <TeamMemberCard
+                          key={`dev-int-${i}`}
+                          member={member}
+                          color="blue"
+                        />
+                      ))}
+                    {(activeTab === "marketing" || activeTab === "all") &&
+                      mktTeam.intern.map((member, i) => (
+                        <TeamMemberCard
+                          key={`mark-int-${i}`}
+                          member={member}
+                          color="orange"
+                        />
+                      ))}
+                  </div>
+                </>
+              )}
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>

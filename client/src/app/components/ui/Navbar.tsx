@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import svgPaths from "../../../imports/svg-1oa7ppovsq";
+
 import imgVector from "@/assets/brand-logo-dark.svg";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import { motion } from "framer-motion";
 
 const navItems = [
   { href: "/services", label: "Services", isRoute: true },
@@ -36,17 +37,26 @@ export function Navbar() {
   const shouldBeTransparent = isLandingPage && !isScrolled;
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 transition-all duration-300 ease-in-out ${
-        shouldBeTransparent
-          ? "bg-transparent py-4"
-          : "bg-white/90 backdrop-blur-md shadow-md py-3"
-      }`}
+    <motion.nav
+      initial={false}
+      animate={{
+        backgroundColor: shouldBeTransparent
+          ? "rgba(255, 255, 255, 0)"
+          : "rgba(255, 255, 255, 0.9)",
+        backdropFilter: shouldBeTransparent ? "blur(0px)" : "blur(12px)",
+        boxShadow: shouldBeTransparent
+          ? "0 0 0 rgba(0, 0, 0, 0)"
+          : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        paddingTop: shouldBeTransparent ? "1.5rem" : "1rem",
+        paddingBottom: shouldBeTransparent ? "1.5rem" : "1rem",
+      }}
+      transition={{ duration: 0.4, ease: "easeInOut" }}
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10"
     >
       <div className="flex-shrink-0">
         <Link to="/" className="flex items-center">
           <img
-            alt="TechTide Icon"
+            alt="Techtide Company Logo"
             className="h-8 md:h-10 w-auto"
             src={imgVector}
           />
@@ -159,6 +169,6 @@ export function Navbar() {
           </div>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
