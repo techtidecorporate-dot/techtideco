@@ -1,0 +1,55 @@
+import { Route, Routes, useLocation } from "react-router-dom";
+import { Footer } from "./components/landing/Footer";
+import { Navbar } from "./components/ui/Navbar";
+import LandingPage from "./pages/landing";
+import TeamPage from "./pages/ourteam";
+import ServicesPage from "./pages/services";
+import BlogPage from "./pages/blog";
+import CareerPage from "./pages/career";
+import ContactPage from "./pages/contact";
+import SignInPage from "./components/ui/signin";
+import { AuthProvider } from "./context/AuthContext";
+import AdminLayout from "./pages/admin/AdminLayout";
+import Dashboard from "./pages/admin/Dashboard";
+import TeamManagement from "./pages/admin/Teams";
+import BlogManagement from "./pages/admin/Blogs";
+import ServiceManagement from "./pages/admin/Services";
+import ContactMessages from "./pages/admin/ContactSubmissions";
+import UserManagement from "./pages/admin/Users";
+import JobApplications from "./pages/admin/Jobs";
+
+export default function App() {
+  const location = useLocation();
+  const isAdminPath = location.pathname.startsWith("/admin");
+  const isSignInPath = location.pathname === "/signin";
+  const hideNavFooter = isAdminPath || isSignInPath;
+
+  return (
+    <AuthProvider>
+      <div className="min-h-screen bg-white">
+        {!hideNavFooter && <Navbar />}
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/ourteam" element={<TeamPage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/career" element={<CareerPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/signin" element={<SignInPage />} />
+
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="teams" element={<TeamManagement />} />
+            <Route path="blogs" element={<BlogManagement />} />
+            <Route path="services" element={<ServiceManagement />} />
+            <Route path="messages" element={<ContactMessages />} />
+            <Route path="users" element={<UserManagement />} />
+            <Route path="jobs" element={<JobApplications />} />
+          </Route>
+        </Routes>
+        {!hideNavFooter && <Footer />}
+      </div>
+    </AuthProvider>
+  );
+}
