@@ -33,12 +33,19 @@ export interface TeamCategory {
 export interface BlogPost {
   _id: string;
   title: string;
+  description: string;
   content: string;
   author: string;
+  readTime: string;
   image?: string;
   tags: string[];
   slug?: string;
+  uploadedDate?: string;
   createdAt: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string[];
+  metaTags?: string;
 }
 
 export interface Service {

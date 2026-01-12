@@ -7,6 +7,7 @@ import ServicesPage from "./pages/services";
 import BlogPage from "./pages/blog";
 import CareerPage from "./pages/career";
 import ContactPage from "./pages/contact";
+import BlogDetailPage from "./pages/BlogDetail";
 import SignInPage from "./components/ui/signin";
 import { AuthProvider } from "./context/AuthContext";
 import { ScrollToTop } from "./components/ui/ScrollToTop";
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/ourteam" element={<TeamPage />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogDetailPage />} />
           <Route path="/career" element={<CareerPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/signin" element={<SignInPage />} />

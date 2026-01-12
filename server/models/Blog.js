@@ -17,11 +17,27 @@ const blogSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  description: {
+    type: String,
+    required: true
+  },
+  readTime: {
+    type: String,
+    default: ''
+  },
+  uploadedDate: {
+    type: Date,
+    default: Date.now
+  },
   tags: [String],
   slug: {
     type: String,
     unique: true
-  }
+  },
+  seoTitle: String,
+  seoDescription: String,
+  seoKeywords: [String],
+  metaTags: String
 }, { timestamps: true });
 
 const Blog = mongoose.model('Blog', blogSchema);

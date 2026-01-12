@@ -1,5 +1,8 @@
 import { ArrowRight, Calendar, Clock, Search } from "lucide-react";
-import { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { blogAPI } from "@/api";
+import { BlogPost } from "@/types";
 
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -7,97 +10,41 @@ export default function BlogPage() {
 
   const categories = ["All", "Web Development", "Mobile Apps", "Tech Trends"];
 
-  const blogPosts = [
-    {
-      id: 1,
-      title: "10 Web Development Trends to Watch in 2026",
-      excerpt:
-        "Discover the latest trends shaping the future of web development, from AI integration to advanced CSS techniques.",
-      author: "Sarah Johnson",
-      date: "Jan 5, 2026",
-      readTime: "8 min read",
-      category: "Web Development",
-      image:
-        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop",
-      tags: ["React", "CSS", "AI"],
-    },
-    {
-      id: 2,
-      title: "Building Scalable Mobile Apps: Best Practices",
-      excerpt:
-        "Learn the essential principles and patterns for creating mobile applications that scale with your business growth.",
-      author: "Michael Chen",
-      date: "Jan 3, 2026",
-      readTime: "12 min read",
-      category: "Mobile Apps",
-      image:
-        "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop",
-      tags: ["React Native", "Flutter", "Architecture"],
-    },
-    {
-      id: 3,
-      title: "SEO Strategies That Actually Work in 2026",
-      excerpt:
-        "Cut through the noise and learn the SEO tactics that are delivering real results for businesses today.",
-      author: "Emily Rodriguez",
-      date: "Dec 28, 2025",
-      readTime: "10 min read",
-      category: "Digital Marketing",
-      image:
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
-      tags: ["SEO", "Marketing", "Strategy"],
-    },
-    {
-      id: 4,
-      title: "Case Study: How We Increased Conversion Rates by 300%",
-      excerpt:
-        "A deep dive into our optimization process and the strategies that tripled conversion rates for our client.",
-      author: "David Park",
-      date: "Dec 25, 2025",
-      readTime: "15 min read",
-      category: "Case Studies",
-      image:
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
-      tags: ["UX", "Optimization", "Analytics"],
-    },
-    {
-      id: 5,
-      title: "The Rise of AI in Software Development",
-      excerpt:
-        "Exploring how artificial intelligence is transforming the way we build and deploy software applications.",
-      author: "Lisa Anderson",
-      date: "Dec 20, 2025",
-      readTime: "9 min read",
-      category: "Tech Trends",
-      image:
-        "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop",
-      tags: ["AI", "Machine Learning", "Future"],
-    },
-    {
-      id: 6,
-      title: "Mastering Progressive Web Apps in 2026",
-      excerpt:
-        "Everything you need to know about building PWAs that deliver native-like experiences on the web.",
-      author: "Tom Williams",
-      date: "Dec 15, 2025",
-      readTime: "11 min read",
-      category: "Web Development",
-      image:
-        "https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&h=600&fit=crop",
-      tags: ["PWA", "Web", "Performance"],
-    },
-  ];
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const { data } = await blogAPI.getAll();
+        setBlogPosts(data);
+      } catch (error) {
+        console.error("Failed to fetch blogs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlogs();
+  }, []);
 
   const filteredPosts = blogPosts.filter((post) => {
     const matchesCategory =
-      selectedCategory === "All" || post.category === selectedCategory;
+      selectedCategory === "All" || post.tags.includes(selectedCategory);
     const matchesSearch =
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+      post.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
   const featuredPost = blogPosts[0];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-[#453abc] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f8f9fa] to-[#eef2f7] font-inter mt-10">
@@ -126,65 +73,78 @@ export default function BlogPage() {
       </div>
 
       {/* Featured Post */}
-      <div className="max-w-7xl mx-auto px-6 md:px-8 -mt-6 md:-mt-10 mb-16 md:mb-20">
-        <div className="glass rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden group transition-all duration-500 hover:shadow-[0_40px_80px_rgba(0,0,0,0.1)]">
-          <div className="grid grid-cols-1 lg:grid-cols-2">
-            <div className="relative h-64 sm:h-80 lg:h-full overflow-hidden">
-              <img
-                src={featuredPost.image}
-                alt={featuredPost.title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#191a23]/40 to-transparent" />
-              <div className="absolute top-6 left-6 glass-dark px-4 py-2 rounded-xl text-white text-[10px] md:text-xs font-poppins tracking-wider uppercase backdrop-blur-md">
-                Featured Article
+      {featuredPost && (
+        <div className="max-w-7xl mx-auto px-6 md:px-8 -mt-6 md:-mt-10 mb-16 md:mb-20">
+          <div className="glass rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden group transition-all duration-500 hover:shadow-[0_40px_80px_rgba(0,0,0,0.1)]">
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              <div className="relative h-64 sm:h-80 lg:h-full overflow-hidden">
+                <img
+                  src={
+                    featuredPost.image
+                      ? featuredPost.image.startsWith("http")
+                        ? featuredPost.image
+                        : `http://localhost:5000${featuredPost.image}`
+                      : ""
+                  }
+                  alt={featuredPost.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#191a23]/40 to-transparent" />
+                <div className="absolute top-6 left-6 glass-dark px-4 py-2 rounded-xl text-white text-[10px] md:text-xs font-poppins tracking-wider uppercase backdrop-blur-md">
+                  Featured Article
+                </div>
               </div>
-            </div>
-            <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center">
-              <div className="flex flex-wrap items-center gap-4 md:gap-6 text-[10px] md:text-xs text-[#6b7280] mb-6">
-                <span className="bg-[#453abc]/5 text-[#453abc] px-4 py-1.5 rounded-full font-medium">
-                  {featuredPost.category}
-                </span>
-                <span className="flex items-center gap-2">
-                  <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#453abc]" />
-                  {featuredPost.date}
-                </span>
-                <span className="flex items-center gap-2">
-                  <Clock className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#453abc]" />
-                  {featuredPost.readTime}
-                </span>
-              </div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-poppins font-medium text-[#191a23] mb-6 leading-tight group-hover:text-[#453abc] transition-colors">
-                {featuredPost.title}
-              </h2>
-              <p className="text-[#6b7280] text-base md:text-lg mb-8 leading-relaxed line-clamp-3 md:line-clamp-none">
-                {featuredPost.excerpt}
-              </p>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-8 mt-auto">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white shadow-sm overflow-hidden bg-gradient-to-br from-[#453abc] to-[#60c3e3] p-[2px]">
-                    <div className="w-full h-full rounded-full bg-white flex items-center justify-center text-[#453abc] font-poppins font-semibold text-sm md:text-base">
-                      {featuredPost.author.charAt(0)}
+              <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center">
+                <div className="flex flex-wrap items-center gap-4 md:gap-6 text-[10px] md:text-xs text-[#6b7280] mb-6">
+                  <span className="bg-[#453abc]/5 text-[#453abc] px-4 py-1.5 rounded-full font-medium">
+                    {featuredPost.tags[0] || "Blog"}
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#453abc]" />
+                    {featuredPost.uploadedDate
+                      ? new Date(featuredPost.uploadedDate).toLocaleDateString()
+                      : new Date(featuredPost.createdAt).toLocaleDateString()}
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <Clock className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#453abc]" />
+                    {featuredPost.readTime}
+                  </span>
+                </div>
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-poppins font-medium text-[#191a23] mb-6 leading-tight group-hover:text-[#453abc] transition-colors">
+                  {featuredPost.title}
+                </h2>
+                <p className="text-[#6b7280] text-base md:text-lg mb-8 leading-relaxed line-clamp-3 md:line-clamp-none">
+                  {featuredPost.description}
+                </p>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-8 mt-auto">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white shadow-sm overflow-hidden bg-gradient-to-br from-[#453abc] to-[#60c3e3] p-[2px]">
+                      <div className="w-full h-full rounded-full bg-white flex items-center justify-center text-[#453abc] font-poppins font-semibold text-sm md:text-base">
+                        {featuredPost.author.charAt(0)}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="block text-sm font-semibold text-[#191a23]">
+                        {featuredPost.author}
+                      </span>
+                      <span className="text-[10px] md:text-xs text-[#6b7280]">
+                        Staff Writer
+                      </span>
                     </div>
                   </div>
-                  <div>
-                    <span className="block text-sm font-semibold text-[#191a23]">
-                      {featuredPost.author}
-                    </span>
-                    <span className="text-[10px] md:text-xs text-[#6b7280]">
-                      Staff Writer
-                    </span>
-                  </div>
+                  <RouterLink
+                    to={`/blog/${featuredPost.slug}`}
+                    className="w-full sm:w-auto bg-[#191a23] text-white px-8 py-4 rounded-2xl font-poppins font-medium hover:bg-[#453abc] transition-all duration-300 hover:translate-x-2 flex items-center justify-center gap-3"
+                  >
+                    Read Article
+                    <ArrowRight className="w-5 h-5" />
+                  </RouterLink>
                 </div>
-                <button className="w-full sm:w-auto bg-[#191a23] text-white px-8 py-4 rounded-2xl font-poppins font-medium hover:bg-[#453abc] transition-all duration-300 hover:translate-x-2 flex items-center justify-center gap-3">
-                  Read Article
-                  <ArrowRight className="w-5 h-5" />
-                </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Search and Filters */}
       <div className="max-w-7xl mx-auto px-6 md:px-8 mb-12 md:mb-16">
@@ -224,70 +184,81 @@ export default function BlogPage() {
       <div className="max-w-7xl mx-auto px-6 md:px-8 pb-20 md:pb-32">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
           {filteredPosts.map((post) => (
-            <article
-              key={post.id}
+            <RouterLink
+              key={post._id}
+              to={`/blog/${post.slug}`}
               className="bg-white rounded-2xl border border-transparent hover:border-[#453abc]/10 shadow-[0_15px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.08)] transition-all duration-500 overflow-hidden group flex flex-col"
             >
-              <div className="relative h-60 overflow-hidden">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#191a23]/20 to-transparent" />
-                <div className="absolute bottom-4 left-4 glass-dark px-3 py-1.5 rounded-xl text-white text-[10px] font-poppins tracking-wider uppercase backdrop-blur-sm">
-                  {post.category}
-                </div>
-              </div>
-
-              <div className="px-6 py-8 flex flex-col flex-1">
-                <div className="flex items-center gap-4 text-[10px] md:text-[11px] text-[#6b7280] font-medium uppercase tracking-wider mb-4">
-                  <span className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-[#453abc]" />
-                    {post.date}
-                  </span>
-                  <span className="w-1 h-1 rounded-full bg-gray-300" />
-                  <span className="flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-[#453abc]" />
-                    {post.readTime}
-                  </span>
+              <article>
+                <div className="relative h-56 overflow-hidden">
+                  <img
+                    src={
+                      post.image
+                        ? post.image.startsWith("http")
+                          ? post.image
+                          : `http://localhost:5000${post.image}`
+                        : "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop"
+                    }
+                    alt={post.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#191a23]/20 to-transparent" />
+                  <div className="absolute bottom-4 left-4 glass-dark px-3 py-1.5 rounded-xl text-white text-[10px] font-poppins tracking-wider uppercase backdrop-blur-sm">
+                    {post.tags[0] || "Blog"}
+                  </div>
                 </div>
 
-                <h3 className="text-xl font-poppins font-medium text-[#191a23] mb-4 line-clamp-2 leading-snug group-hover:text-[#453abc] transition-colors">
-                  {post.title}
-                </h3>
-
-                <p className="text-[#6b7280] text-sm mb-6 line-clamp-3 leading-relaxed">
-                  {post.excerpt}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {post.tags.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className="bg-[#f8f9fa] text-[#6b7280] px-3 py-1 rounded-lg text-[9px] md:text-[10px] font-medium tracking-wide uppercase"
-                    >
-                      #{tag}
+                <div className="px-6 py-8 flex flex-col flex-1">
+                  <div className="flex items-center gap-4 text-[10px] md:text-[11px] text-[#6b7280] font-medium uppercase tracking-wider mb-4">
+                    <span className="flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-[#453abc]" />
+                      {post.uploadedDate
+                        ? new Date(post.uploadedDate).toLocaleDateString()
+                        : new Date(post.createdAt).toLocaleDateString()}
                     </span>
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-between border-t border-gray-50 pt-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#453abc] to-[#60c3e3] flex items-center justify-center text-white text-[10px] font-poppins font-semibold">
-                      {post.author.charAt(0)}
-                    </div>
-                    <span className="text-[11px] font-semibold text-[#191a23]">
-                      {post.author}
+                    <span className="w-1 h-1 rounded-full bg-gray-300" />
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-[#453abc]" />
+                      {post.readTime}
                     </span>
                   </div>
-                  <button className="text-[#453abc] font-poppins font-medium text-[11px] flex items-center gap-1 hover:gap-2 transition-all">
-                    Full Story
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+
+                  <h3 className="text-xl font-poppins font-medium text-[#191a23] mb-4 line-clamp-2 leading-snug group-hover:text-[#453abc] transition-colors">
+                    {post.title}
+                  </h3>
+
+                  <p className="text-[#6b7280] text-sm mb-6 line-clamp-3 leading-relaxed">
+                    {post.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {post.tags.map((tag, idx) => (
+                      <span
+                        key={idx}
+                        className="bg-[#f8f9fa] text-[#6b7280] px-3 py-1 rounded-lg text-[9px] md:text-[10px] font-medium tracking-wide uppercase"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between border-t border-gray-50 ">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#453abc] to-[#60c3e3] flex items-center justify-center text-white text-[10px] font-poppins font-semibold">
+                        {post.author.charAt(0)}
+                      </div>
+                      <span className="text-[11px] font-semibold text-[#191a23]">
+                        {post.author}
+                      </span>
+                    </div>
+                    <button className="text-[#453abc] font-poppins font-medium text-[11px] flex items-center gap-1 hover:gap-2 transition-all">
+                      Full Story
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            </RouterLink>
           ))}
         </div>
 

@@ -39,8 +39,8 @@ export const teamAPI = {
 
 export const blogAPI = {
   getAll: () => api.get<BlogPost[]>('/blogs'),
-  create: (data: Partial<BlogPost>) => api.post('/blogs', data),
-  update: (id: string, data: Partial<BlogPost>) => api.put(`/blogs/${id}`, data),
+  create: (data: FormData | Partial<BlogPost>) => api.post('/blogs', data),
+  update: (id: string, data: FormData | Partial<BlogPost>) => api.put(`/blogs/${id}`, data),
   delete: (id: string) => api.delete(`/blogs/${id}`),
 };
 

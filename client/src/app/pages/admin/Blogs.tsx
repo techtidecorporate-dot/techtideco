@@ -8,7 +8,6 @@ import {
   Save,
   Search,
   User,
-  Tag,
   Calendar,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -21,12 +20,21 @@ export default function BlogManagement() {
   const [searchTerm, setSearchTerm] = useState("");
   const [formData, setFormData] = useState({
     title: "",
+    description: "",
     content: "",
     author: "",
+    readTime: "",
+    uploadedDate: "",
     image: "",
     tags: "",
     slug: "",
+    seoTitle: "",
+    seoDescription: "",
+    seoKeywords: "",
+    metaTags: "",
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
 
   useEffect(() => {
     fetchBlogs();
@@ -48,18 +56,28 @@ export default function BlogManagement() {
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
   ) => {
+    if (
+      e.target.name === "image" &&
+      e.target instanceof HTMLInputElement &&
+      e.target.files
+    ) {
+      const file = e.target.files[0];
+      setSelectedFile(file);
+      setImagePreview(URL.createObjectURL(file));
+      return;
+    }
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = {
-      ...formData,
-      tags: formData.tags
-        .split(",")
-        .map((t) => t.trim())
-        .filter((t) => t !== ""),
-    };
+    const payload = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (key !== "image") payload.append(key, value);
+    });
+    if (selectedFile) {
+      payload.append("image", selectedFile);
+    }
 
     try {
       if (editingBlog) {
@@ -81,12 +99,23 @@ export default function BlogManagement() {
     setEditingBlog(blog);
     setFormData({
       title: blog.title,
+      description: blog.description || "",
       content: blog.content,
       author: blog.author,
+      readTime: blog.readTime || "",
+      uploadedDate: blog.uploadedDate
+        ? new Date(blog.uploadedDate).toISOString().split("T")[0]
+        : "",
       image: blog.image || "",
       tags: blog.tags.join(", "),
       slug: blog.slug || "",
+      seoTitle: blog.seoTitle || "",
+      seoDescription: blog.seoDescription || "",
+      seoKeywords: blog.seoKeywords ? blog.seoKeywords.join(", ") : "",
+      metaTags: blog.metaTags || "",
     });
+    setImagePreview(blog.image || "");
+    setSelectedFile(null);
     setIsModalOpen(true);
   };
 
@@ -106,12 +135,21 @@ export default function BlogManagement() {
     setEditingBlog(null);
     setFormData({
       title: "",
+      description: "",
       content: "",
       author: "",
+      readTime: "",
+      uploadedDate: "",
       image: "",
       tags: "",
       slug: "",
+      seoTitle: "",
+      seoDescription: "",
+      seoKeywords: "",
+      metaTags: "",
     });
+    setSelectedFile(null);
+    setImagePreview("");
   };
 
   const filteredBlogs = blogs.filter(
@@ -170,7 +208,11 @@ export default function BlogManagement() {
               <div className="h-48 bg-white/5 relative group">
                 {blog.image ? (
                   <img
-                    src={blog.image}
+                    src={
+                      blog.image.startsWith("http")
+                        ? blog.image
+                        : `http://localhost:5000${blog.image}`
+                    }
                     alt={blog.title}
                     className="w-full h-full object-cover"
                   />
@@ -276,6 +318,33 @@ export default function BlogManagement() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">
+                    Read Time (e.g., 5 min read)
+                  </label>
+                  <input
+                    name="readTime"
+                    value={formData.readTime}
+                    onChange={handleChange}
+                    placeholder="8 min read"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">
+                    Uploaded Date
+                  </label>
+                  <input
+                    type="date"
+                    name="uploadedDate"
+                    value={formData.uploadedDate}
+                    onChange={handleChange}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">
                     Tags (comma separated)
                   </label>
                   <input
@@ -286,6 +355,21 @@ export default function BlogManagement() {
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  required
+                  rows={3}
+                  value={formData.description}
+                  onChange={handleChange}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50 resize-none"
+                  placeholder="Short summary for the blog card..."
+                />
               </div>
 
               <div className="space-y-2">
@@ -306,14 +390,28 @@ export default function BlogManagement() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">
-                    Image URL
+                    Image
                   </label>
-                  <input
-                    name="image"
-                    value={formData.image}
-                    onChange={handleChange}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50"
-                  />
+                  <div className="flex items-center gap-4">
+                    {imagePreview && (
+                      <img
+                        src={
+                          imagePreview.startsWith("blob")
+                            ? imagePreview
+                            : `http://localhost:5000${imagePreview}`
+                        }
+                        alt="Preview"
+                        className="w-20 h-20 object-cover rounded-xl border border-white/10"
+                      />
+                    )}
+                    <input
+                      type="file"
+                      name="image"
+                      accept="image/*"
+                      onChange={handleChange}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50 text-sm"
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">
@@ -326,6 +424,66 @@ export default function BlogManagement() {
                     placeholder="future-of-techtide"
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50"
                   />
+                </div>
+              </div>
+
+              <div className="border-t border-white/5 pt-6 space-y-6">
+                <h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest">
+                  SEO Settings
+                </h4>
+
+                <div className="space-y-2">
+                  <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">
+                    SEO Title
+                  </label>
+                  <input
+                    name="seoTitle"
+                    value={formData.seoTitle}
+                    onChange={handleChange}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50"
+                    placeholder="Focus keyword included title..."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">
+                    SEO Description
+                  </label>
+                  <textarea
+                    name="seoDescription"
+                    rows={2}
+                    value={formData.seoDescription}
+                    onChange={handleChange}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50 resize-none"
+                    placeholder="Meta description for search engines..."
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">
+                      SEO Keywords (comma separated)
+                    </label>
+                    <input
+                      name="seoKeywords"
+                      value={formData.seoKeywords}
+                      onChange={handleChange}
+                      placeholder="keyword1, keyword2..."
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">
+                      Meta Tags
+                    </label>
+                    <input
+                      name="metaTags"
+                      value={formData.metaTags}
+                      onChange={handleChange}
+                      placeholder="tag1, tag2..."
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50"
+                    />
+                  </div>
                 </div>
               </div>
 
