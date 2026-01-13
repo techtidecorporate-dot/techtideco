@@ -1,53 +1,43 @@
-import { Code, Shield, Smartphone, TrendingUp, Users, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
+import { serviceAPI } from "@/api";
+import { Service } from "@/types";
+import { Loader2 } from "lucide-react";
+
+const gradients = [
+  "from-[#453abc] to-[#60c3e3]",
+  "from-[#60c3e3] to-[#453abc]",
+  "from-[#453abc] via-[#60c3e3] to-[#453abc]",
+];
+
+import { FloatingCTA } from "../components/ui/FloatingCTA";
 
 export default function ServicesPage() {
-  const services = [
-    {
-      icon: <Code className="w-12 h-12" />,
-      title: "Web Development",
-      description:
-        "We build fast, secure, and scalable websites designed to enhance performance, visibility, and long-term business growth.",
-      gradient: "from-[#453abc] to-[#60c3e3]",
-    },
-    {
-      icon: <Smartphone className="w-12 h-12" />,
-      title: "Mobile App Development",
-      description:
-        "We develop high-performance iOS and Android applications that deliver seamless experiences and drive meaningful user engagement.",
-      gradient: "from-[#60c3e3] to-[#453abc]",
-    },
-    {
-      icon: <TrendingUp className="w-12 h-12" />,
-      title: "Digital Marketing",
-      description:
-        "We create data-driven digital marketing strategies that increase brand visibility, attract audiences, and convert leads effectively.",
-      gradient: "from-[#453abc] via-[#60c3e3] to-[#453abc]",
-    },
-    {
-      icon: <Shield className="w-12 h-12" />,
-      title: "Cybersecurity Solutions",
-      description:
-        "We protect your systems with robust cybersecurity solutions that safeguard data, prevent threats, and ensure business continuity.",
-      gradient: "from-[#60c3e3] to-[#453abc]",
-    },
-    {
-      icon: <Zap className="w-12 h-12" />,
-      title: "Cloud Solutions",
-      description:
-        "We deliver scalable cloud solutions that improve operational efficiency, reduce infrastructure costs, and support business expansion.",
-      gradient: "from-[#453abc] to-[#60c3e3]",
-    },
-    {
-      icon: <Users className="w-12 h-12" />,
-      title: "IT Consulting",
-      description:
-        "We provide strategic IT consulting to help organizations optimize technology decisions and achieve sustainable digital growth.",
-      gradient: "from-[#60c3e3] to-[#453abc]",
-    },
-  ];
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const { data } = await serviceAPI.getAll();
+        setServices(data);
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchServices();
+  }, []);
+
+  const getImageUrl = (path: string) => {
+    if (!path) return "";
+    if (path.startsWith("http")) return path;
+    return `http://localhost:5000${path}`;
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f8f9fa] to-[#eef2f7] font-inter mt-10">
+      <FloatingCTA />
       {/* Hero Section */}
       <div className="relative pt-32 pb-16 md:py-44 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -74,29 +64,54 @@ export default function ServicesPage() {
 
       {/* Services Grid */}
       <div className="max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-[2rem] md:rounded-[2.5rem] border border-transparent shadow-[0_15px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_40px_80px_rgba(0,0,0,0.08)] hover:border-[#453abc]/10 transition-all duration-500 overflow-hidden group flex flex-col"
-            >
-              <div className="p-8 md:p-10 lg:p-12">
-                <div
-                  className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br ${service.gradient} flex items-center justify-center text-white mb-6 md:mb-8 shadow-lg group-hover:scale-110 transition-transform duration-500`}
-                >
-                  <div className="scale-75 md:scale-100">{service.icon}</div>
-                </div>
-                <h3 className="text-xl md:text-2xl font-poppins font-medium text-[#191a23] mb-3  group-hover:text-[#453abc] transition-colors">
-                  {service.title}
-                </h3>
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="w-10 h-10 text-[#453abc] animate-spin" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            {services.map((service, index) => (
+              <div
+                key={service._id}
+                className="bg-white rounded-[1rem] md:rounded-[1rem] border border-transparent shadow-[0_15px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_40px_80px_rgba(0,0,0,0.08)] hover:border-[#453abc]/10 transition-all duration-500 overflow-hidden group flex flex-col"
+              >
+                {service.image && (
+                  <div className="h-52 overflow-hidden">
+                    <img
+                      src={getImageUrl(service.image)}
+                      alt={service.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                )}
+                <div className="p-4">
+                  <h3 className="text-xl md:text-2xl font-poppins font-medium text-[#191a23] mb-3  group-hover:text-[#453abc] transition-colors">
+                    {service.title}
+                  </h3>
 
-                <p className="text-[#6b7280] text-sm md:text-base leading-relaxed font-inter">
-                  {service.description}
-                </p>
+                  <p className="text-[#6b7280] text-sm md:text-base leading-relaxed font-inter mb-6">
+                    {service.shortDescription}
+                  </p>
+
+                  <button
+                    onClick={() =>
+                      window.dispatchEvent(
+                        new CustomEvent("open-partner-drawer")
+                      )
+                    }
+                    className="w-full py-2.5 rounded-lg text-white font-medium shadow-md transition-all hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 text-xs sm:text-sm mt-auto"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(93.1835deg, rgb(69, 58, 188) 0%, rgb(96, 195, 227) 103.41%)",
+                    }}
+                  >
+                    Get in touch
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* CTA Section */}

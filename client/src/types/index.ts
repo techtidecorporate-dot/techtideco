@@ -51,10 +51,31 @@ export interface BlogPost {
 export interface Service {
   _id: string;
   title: string;
+  shortDescription: string;
   description: string;
+  image: string;
+  features: string[];
   icon?: string;
   color?: string;
   bgColor?: string;
+  slug: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoKeywords?: string[];
+}
+
+export interface JobPosition {
+  _id: string;
+  title: string;
+  department: string;
+  location: string;
+  type: string;
+  salary?: string;
+  description: string;
+  requirements: string[];
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface JobApplication {
@@ -63,6 +84,8 @@ export interface JobApplication {
   email: string;
   phone: string;
   position: string;
+  jobPosition?: string | JobPosition;
+  coverLetter: string;
   resume?: string;
   status: 'pending' | 'reviewed' | 'contacted' | 'rejected';
   createdAt: string;

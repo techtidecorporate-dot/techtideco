@@ -22,11 +22,11 @@ export default function VisionMission() {
 
           {/* Content */}
           <p className="text-base md:text-xl text-gray-700 leading-relaxed max-w-5xl italic md:not-italic">
-            At TechTide, we envision transforming IT systems into smart, agile,
-            and AI-driven digital assets. With a decade of expertise, we empower
-            global clients through innovative, adaptive solutions, shaping a
-            future where technology meets the dynamic demands of a connected
-            world.
+            Techtide Corporate LLP is committed to setting a global standard in
+            technological excellence. More than a software company, we serve as
+            a trusted partner in innovation and meaningful impact using advanced
+            technology to uplift communities and build a future-ready world from
+            Pakistan outward.
           </p>
         </div>
       </div>
@@ -50,9 +50,11 @@ export default function VisionMission() {
 
           {/* Content */}
           <p className="text-base md:text-xl text-gray-700 leading-relaxed max-w-5xl italic md:not-italic">
-            Our mission is to deliver scalable, secure, and intelligent digital
-            solutions that help businesses innovate faster, operate smarter, and
-            achieve sustainable growth through cutting-edge technology.
+            Techtide Corporate LLP is committed to crafting exceptional digital
+            solutions and reinvesting our growth where it matters into the
+            youth, into critical job creation, and into open access to
+            education. We stand for progress with intent and partnerships that
+            make a difference
           </p>
         </div>
       </div>

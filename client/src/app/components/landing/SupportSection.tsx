@@ -1,21 +1,42 @@
 import { useState } from "react";
-import { Send, Mail, Phone, MapPin } from "lucide-react";
-import imgUntitledDesign from "@/assets/review2.png";
+import { Send, Users, Shield } from "lucide-react";
+import { contactAPI } from "@/api";
+import { toast } from "sonner";
 
 export function SupportSection() {
   const [formData, setFormData] = useState({
     firstName: "",
-    lastName: "",
     email: "",
     phone: "",
     subject: "",
     message: "",
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Handle form submission
+    setLoading(true);
+    try {
+      await contactAPI.create({
+        name: formData.firstName,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        message: formData.message,
+      });
+      toast.success("Message sent! We'll get back to you soon.");
+      setFormData({
+        firstName: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      toast.error("Failed to send message. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (
@@ -40,7 +61,7 @@ export function SupportSection() {
 
       <div className="relative max-w-7xl mx-auto px-6 md:px-8">
         {/* Header */}
-        <div className="text-center mb-12 md:mb-16">
+        <div className="text-center mb-8">
           <h2 className="text-[#191a23] text-3xl md:text-5xl font-poppins font-medium mb-4">
             Our Premium{" "}
             <span
@@ -60,13 +81,12 @@ export function SupportSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Contact Form */}
-          <div className="bg-white rounded-[2rem] shadow-xl p-8 md:p-12 border border-gray-100">
-            <h3 className="text-[#191a23] text-2xl font-poppins font-medium mb-8">
+          <div className="bg-gray-100 rounded-[2rem] shadow-xl md:p-8 border border-gray-100">
+            <h3 className="text-[#191a23] text-2xl font-poppins font-medium mb-6">
               Send us a Message
             </h3>
-
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div className="space-y-2">
@@ -89,20 +109,20 @@ export function SupportSection() {
                 </div>
                 <div className="space-y-2">
                   <label
-                    htmlFor="lastName"
+                    htmlFor="email"
                     className="text-sm font-medium text-gray-700 ml-1"
                   >
-                    Last Name
+                    Email Address
                   </label>
                   <input
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    value={formData.lastName}
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-4 md:py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#453abc] focus:border-transparent transition-all"
-                    placeholder="Enter last name"
+                    placeholder="Enter email address"
                   />
                 </div>
               </div>
@@ -159,7 +179,7 @@ export function SupportSection() {
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  rows={4}
+                  rows={2}
                   className="w-full px-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#453abc] focus:border-transparent transition-all resize-none"
                   placeholder="Tell us more about your project goals..."
                 />
@@ -167,40 +187,82 @@ export function SupportSection() {
 
               <button
                 type="submit"
-                className="w-full px-8 py-4 rounded-xl shadow-lg transition-all hover:shadow-xl hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3"
+                disabled={loading}
+                className="w-full px-8 py-4 rounded-xl shadow-lg transition-all hover:shadow-xl hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   backgroundImage:
                     "linear-gradient(93.1835deg, rgb(69, 58, 188) 0%, rgb(96, 195, 227) 103.41%)",
                 }}
               >
                 <span className="text-white font-poppins font-medium">
-                  Send Message
+                  {loading ? "Sending..." : "Send Message"}
                 </span>
-                <Send className="w-5 h-5 text-white" />
+                {!loading && <Send className="w-5 h-5 text-white" />}
               </button>
             </form>
           </div>
 
-          {/* Contact Information & Image */}
-          <div className="lg:block hidden">
-            <div className="relative rounded-[3rem] overflow-hidden bg-gradient-to-br from-[#453abc]/5 to-[#60c3e3]/5 p-8">
-              <img
-                alt="Support team member"
-                className="w-full h-[450px] object-contain rounded-2xl"
-                src={imgUntitledDesign}
-              />
-              <div className="mt-8 space-y-4">
-                <div className="flex items-center gap-4 text-gray-600">
-                  <div className="p-3 bg-white rounded-xl shadow-sm">
-                    <Mail className="w-5 h-5 text-[#453abc]" />
+          {/* Information Column */}
+          <div className="space-y-6 md:space-y-4 p-0 md:p-4">
+            <div className="bg-white rounded-[2rem] border border-gray-100 shadow-xl p-6 md:p-6">
+              <h3 className="text-xl md:text-2xl font-poppins font-semibold text-[#191a23] mb-6">
+                Why Choose TechTide?
+              </h3>
+              <div className="space-y-6">
+                <div className="flex gap-5">
+                  <div className="w-12 h-12 rounded-xl bg-[#453abc]/5 flex items-center justify-center text-[#453abc] flex-shrink-0 shadow-sm">
+                    <Send className="w-6 h-6 rotate-[-45deg]" />
                   </div>
-                  <span className="font-medium">support@techtide.pk</span>
+                  <div>
+                    <h4 className="font-poppins font-semibold text-[#191a23] mb-1">
+                      Fast Response Time
+                    </h4>
+                    <p className="text-[#6b7280] text-sm leading-relaxed">
+                      We respond to all inquiries within 24 hours
+                    </p>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4 text-gray-600">
-                  <div className="p-3 bg-white rounded-xl shadow-sm">
-                    <Phone className="w-5 h-5 text-[#453abc]" />
+                <div className="flex gap-5">
+                  <div className="w-12 h-12 rounded-xl bg-[#453abc]/5 flex items-center justify-center text-[#453abc] flex-shrink-0 shadow-sm">
+                    <Users className="w-6 h-6" />
                   </div>
-                  <span className="font-medium">+92 (300) 123-4567</span>
+                  <div>
+                    <h4 className="font-poppins font-semibold text-[#191a23] mb-1">
+                      Expert Team
+                    </h4>
+                    <p className="text-[#6b7280] text-sm leading-relaxed">
+                      Work with experienced professionals
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#191a23] bg-gradient-to-br from-[#191a23] via-[#453abc]/10 to-[#191a23] rounded-[2rem] p-8 md:p-10 text-white shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#453abc]/10 rounded-full blur-[80px]" />
+              <div className="relative z-10">
+                <h3 className="text-xl md:text-2xl font-poppins font-semibold mb-6">
+                  Office Hours
+                </h3>
+                <div className="space-y-4 text-gray-300">
+                  <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                    <span className="text-sm font-medium">
+                      Monday - Saturday
+                    </span>
+                    <span className="font-semibold text-white">
+                      11:00 AM - 7:00 PM
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                    <span className="text-sm font-medium">Friday</span>
+                    <span className="font-semibold text-white">
+                      3:00 PM - 7:00 PM
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium">Sunday</span>
+                    <span className="font-semibold text-[#60c3e3]">Closed</span>
+                  </div>
                 </div>
               </div>
             </div>

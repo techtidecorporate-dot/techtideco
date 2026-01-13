@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import imgNadir from "@/assets/nadir.png";
 import imgMoazzam from "@/assets/Moazzam.png";
 import imgSajid from "@/assets/sajideen.png";
@@ -12,35 +12,35 @@ const leaders = [
     role: "CEO & Founder",
     image: imgNadir,
     message:
-      "Techtide exists to build profitable technology while empowering Pakistan’s youth through jobs, education, and sustainable initiatives, turning every successful project into measurable national progress together.",
+      "As CEO and Founder of TechTide Corporate, I lead our vision to deliver innovative, scalable technology solutions while empowering businesses and nurturing Pakistan’s digital talent ecosystem.",
   },
   {
     name: "Muhammad Moazzam",
-    role: "COO",
+    role: "CFO",
     image: imgMoazzam,
     message:
-      "Moazzam ensures operational excellence by aligning teams, optimizing processes, and delivering projects efficiently, on time, and at scale while maintaining quality, accountability, and continuous improvement.",
+      "As CFO at TechTide Co., I oversee financial strategy, budgeting, and risk management to ensure sustainable growth, profitability, and long-term financial stability across all operations.",
   },
   {
     name: "Sajideen Hassan",
     role: "CTO",
     image: imgSajid,
     message:
-      "Sajideen leads our technology vision, designing secure, scalable systems, driving innovation, and enabling teams to deliver reliable products using modern architectures and forward-thinking engineering practices.",
+      "As CTO of TechTide Corporate, I lead our engineering strategy by building secure, high-performance architectures and driving innovation that powers reliable, future-ready digital products.",
   },
   {
     name: "Shamin Gull",
-    role: "Operations Manager",
+    role: "COO",
     image: imgShamin,
     message:
-      "Shamin manages daily operations and projects, coordinating teams, timelines, and resources to ensure consistent execution, risk control, and precise delivery across all organizational functions companywide.",
+      "As COO at TechTide Co., I manage company-wide operations by aligning teams, optimizing workflows, and ensuring efficient project execution with consistent quality and accountability.",
   },
   {
     name: "Muhammad Ammar",
     role: "Digital Marketing Head",
     image: imgAmmar,
     message:
-      "Ammar leads digital marketing strategy, strengthening brand presence, generating demand, and connecting our solutions with global audiences through data-driven campaigns and performance-focused growth initiatives worldwide.",
+      "As Digital Marketing Head at TechTide Corporate, I lead performance-driven marketing strategies that enhance brand visibility, generate demand, and expand our global digital presence.",
   },
 ];
 
@@ -94,80 +94,95 @@ export function LeadershipSection() {
               "
             </span>
           </div>
-
-          <button className="px-8 py-3 bg-[#4b49c6] text-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 active:translate-y-0 transition-all font-medium">
-            Read More
-          </button>
         </div>
 
         {/* Image Section */}
-        <div className="flex-1 relative w-full max-w-[200px] md:max-w-sm h-[350px] md:h-[500px] perspective-1000">
-          {leaders.map((leader, index) => {
-            const position =
-              (index - current + leaders.length) % leaders.length;
-
-            // Position logic for 5 elements
-            let xOffset = 0;
-            let scale = 1;
-            let blur = "0px";
-            let rotateY = 0;
-            let zIndex = 20;
-            let opacity = 0;
-
-            if (position === 0) {
-              // Center/Front - Crystal Clear
-              xOffset = 0;
-              scale = 1;
-              zIndex = 30;
-              opacity = 1;
-              blur = "0px";
-            } else if (position === 1) {
-              // Right side - Blurred
-              xOffset = 220;
-              scale = 0.75;
-              rotateY = -25;
-              zIndex = 20;
-              opacity = 0.4;
-              blur = "12px";
-            } else if (position === 4) {
-              // Left side - Blurred
-              xOffset = -220;
-              scale = 0.75;
-              rotateY = 25;
-              zIndex = 20;
-              opacity = 0.4;
-              blur = "12px";
-            } else {
-              // In the back - Completely hidden and scaled to zero
-              xOffset = 0;
-              scale = 0;
-              zIndex = 5;
-              opacity = 0;
-              blur = "0px";
-            }
-
-            return (
+        <div className="flex-1 relative w-full h-[350px] md:h-[500px] flex justify-center items-center">
+          {/* Mobile View: Simple Fade */}
+          <div className="lg:hidden relative w-full h-full flex justify-center items-center">
+            <AnimatePresence mode="wait">
               <motion.img
-                key={leader.name}
-                src={leader.image}
-                alt={`Photo of ${leader.name}, ${leader.role} at Techtide`}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{
-                  opacity,
-                  scale,
-                  x: xOffset,
-                  zIndex,
-                  filter: `blur(${blur})`,
-                  rotateY,
-                }}
-                transition={{
-                  duration: 0.8,
-                  ease: "easeInOut",
-                }}
-                className="absolute top-0 left-0 w-full h-[300px] md:h-[400px] object-contain object-top pointer-events-none"
+                key={leaders[current].name}
+                src={leaders[current].image}
+                alt={leaders[current].name}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.5 }}
+                className="w-auto h-full max-h-[350px] object-contain drop-shadow-xl"
               />
-            );
-          })}
+            </AnimatePresence>
+          </div>
+
+          {/* Desktop View: 3D Carousel */}
+          <div className="hidden lg:block relative w-full max-w-sm h-full perspective-1000">
+            {leaders.map((leader, index) => {
+              const position =
+                (index - current + leaders.length) % leaders.length;
+
+              // Position logic for 5 elements
+              let xOffset = 0;
+              let scale = 1;
+              let blur = "0px";
+              let rotateY = 0;
+              let zIndex = 20;
+              let opacity = 0;
+
+              if (position === 0) {
+                // Center/Front - Crystal Clear
+                xOffset = 0;
+                scale = 1;
+                zIndex = 30;
+                opacity = 1;
+                blur = "0px";
+              } else if (position === 1) {
+                // Right side - Blurred
+                xOffset = 220;
+                scale = 0.75;
+                rotateY = -25;
+                zIndex = 20;
+                opacity = 0.4;
+                blur = "12px";
+              } else if (position === 4) {
+                // Left side - Blurred
+                xOffset = -220;
+                scale = 0.75;
+                rotateY = 25;
+                zIndex = 20;
+                opacity = 0.4;
+                blur = "12px";
+              } else {
+                // In the back - Completely hidden and scaled to zero
+                xOffset = 0;
+                scale = 0;
+                zIndex = 5;
+                opacity = 0;
+                blur = "0px";
+              }
+
+              return (
+                <motion.img
+                  key={leader.name}
+                  src={leader.image}
+                  alt={leader.name}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{
+                    opacity,
+                    scale,
+                    x: xOffset,
+                    zIndex,
+                    filter: `blur(${blur})`,
+                    rotateY,
+                  }}
+                  transition={{
+                    duration: 0.8,
+                    ease: "easeInOut",
+                  }}
+                  className="absolute top-0 left-0 w-full h-full object-contain object-top pointer-events-none"
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

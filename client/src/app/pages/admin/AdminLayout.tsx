@@ -55,7 +55,8 @@ export default function AdminLayout() {
   const menuItems = [
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/admin/users", icon: Users, label: "Users" },
-    { to: "/admin/jobs", icon: Briefcase, label: "Jobs" },
+    { to: "/admin/job-positions", icon: Briefcase, label: "Job Positions" },
+    { to: "/admin/jobs", icon: Briefcase, label: "Job Applications" },
     { to: "/admin/teams", icon: Users, label: "Teams" },
     { to: "/admin/blogs", icon: BookOpen, label: "Blogs" },
     { to: "/admin/services", icon: Box, label: "Services" },

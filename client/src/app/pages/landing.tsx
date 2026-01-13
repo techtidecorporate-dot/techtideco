@@ -3,7 +3,7 @@ import { HeroSection } from "../components/landing/HeroSection";
 import VisionMissionSection from "../components/landing/VisionMissionSection";
 import { ServicesSection } from "../components/landing/ServicesSection";
 import { ProjectsSection } from "../components/landing/ProjectsSection";
-import { TeamSection } from "../components/landing/TeamSection";
+import { TeamSection } from "../components/landing/testimonials";
 import { LeadershipSection } from "../components/landing/LeadershipSection";
 import { BlogSection } from "../components/landing/BlogSection";
 import { SupportSection } from "../components/landing/SupportSection";

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const jobSchema = new mongoose.Schema({
+const jobApplicationSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -17,6 +17,14 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  jobPosition: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'JobPosition'
+  },
+  coverLetter: {
+    type: String,
+    required: true
+  },
   resume: {
     type: String // URL or path to file
   },
@@ -27,5 +35,5 @@ const jobSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-const Job = mongoose.model('Job', jobSchema);
-export default Job;
+const JobApplication = mongoose.model('JobApplication', jobApplicationSchema);
+export default JobApplication;

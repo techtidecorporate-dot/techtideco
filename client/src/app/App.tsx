@@ -8,7 +8,10 @@ import BlogPage from "./pages/blog";
 import CareerPage from "./pages/career";
 import ContactPage from "./pages/contact";
 import BlogDetailPage from "./pages/BlogDetail";
+import ServiceDetailPage from "./pages/ServiceDetailPage";
+import { PartnerWithUsDrawer } from "./components/ui/PartnerWithUsDrawer";
 import SignInPage from "./components/ui/signin";
+import { useState, useEffect } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { ScrollToTop } from "./components/ui/ScrollToTop";
 
@@ -20,22 +23,32 @@ import ServiceManagement from "./pages/admin/Services";
 import ContactMessages from "./pages/admin/ContactSubmissions";
 import UserManagement from "./pages/admin/Users";
 import JobApplications from "./pages/admin/Jobs";
+import JobPositions from "./pages/admin/JobPositions";
 
 export default function App() {
   const location = useLocation();
+  const [isPartnerDrawerOpen, setIsPartnerDrawerOpen] = useState(false);
   const isAdminPath = location.pathname.startsWith("/admin");
   const isSignInPath = location.pathname === "/signin";
   const hideNavFooter = isAdminPath || isSignInPath;
 
+  useEffect(() => {
+    const handleOpenDrawer = () => setIsPartnerDrawerOpen(true);
+    window.addEventListener("open-partner-drawer", handleOpenDrawer);
+    return () =>
+      window.removeEventListener("open-partner-drawer", handleOpenDrawer);
+  }, []);
+
   return (
     <AuthProvider>
       <ScrollToTop />
-      <div className="min-h-screen bg-white">
+      <div className="relative min-h-screen bg-white">
         {!hideNavFooter && <Navbar />}
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/ourteam" element={<TeamPage />} />
           <Route path="/services" element={<ServicesPage />} />
+          <Route path="/services/:slug" element={<ServiceDetailPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogDetailPage />} />
           <Route path="/career" element={<CareerPage />} />
@@ -50,9 +63,14 @@ export default function App() {
             <Route path="services" element={<ServiceManagement />} />
             <Route path="messages" element={<ContactMessages />} />
             <Route path="users" element={<UserManagement />} />
+            <Route path="job-positions" element={<JobPositions />} />
             <Route path="jobs" element={<JobApplications />} />
           </Route>
         </Routes>
+        <PartnerWithUsDrawer
+          isOpen={isPartnerDrawerOpen}
+          onClose={() => setIsPartnerDrawerOpen(false)}
+        />
         {!hideNavFooter && <Footer />}
       </div>
     </AuthProvider>

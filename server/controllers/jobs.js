@@ -1,8 +1,8 @@
-import Job from '../models/Job.js';
+import JobApplication from '../models/Job.js';
 
 export const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({}).sort({ createdAt: -1 });
+    const jobs = await JobApplication.find({}).populate('jobPosition').sort({ createdAt: -1 });
     res.json(jobs);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -11,7 +11,12 @@ export const getJobs = async (req, res) => {
 
 export const createJob = async (req, res) => {
   try {
-    const job = new Job(req.body);
+    const jobData = {
+      ...req.body,
+      resume: req.file ? `/uploads/${req.file.filename}` : undefined
+    };
+    
+    const job = new JobApplication(jobData);
     const createdJob = await job.save();
     res.status(201).json(createdJob);
   } catch (error) {
@@ -21,7 +26,7 @@ export const createJob = async (req, res) => {
 
 export const updateJobStatus = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id);
+    const job = await JobApplication.findById(req.params.id);
     if (job) {
       job.status = req.body.status || job.status;
       const updatedJob = await job.save();
@@ -36,7 +41,7 @@ export const updateJobStatus = async (req, res) => {
 
 export const deleteJob = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id);
+    const job = await JobApplication.findById(req.params.id);
     if (job) {
       await job.deleteOne();
       res.json({ message: 'Job application removed' });

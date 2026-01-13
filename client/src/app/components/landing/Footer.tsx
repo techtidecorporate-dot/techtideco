@@ -1,37 +1,46 @@
 import imgVector from "@/assets/brand-logo-dark.svg";
+import { Link } from "react-router-dom";
 import {
   FaLinkedinIn,
   FaInstagram,
-  FaFacebookF,
-  FaTwitter,
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaArrowRight,
 } from "react-icons/fa";
 
 const footerLinks = {
-  company: ["About Us", "Our Team", "Careers", "Contact"],
+  quicklinks: [
+    { label: "Services", href: "/services" },
+    { label: "Our Team", href: "/ourteam" },
+    { label: "Careers", href: "/career" },
+    { label: "Contact", href: "/contact" },
+  ],
   services: [
     "Web Development",
     "Mobile Apps",
     "Digital Marketing",
     "Cloud Solutions",
   ],
-  resources: ["Blog", "Case Studies", "Documentation", "Support"],
   legal: ["Privacy Policy", "Terms of Service", "Cookie Policy"],
 };
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-white pt-16 md:pt-20 pb-8 overflow-hidden">
+    <footer className="bg-gray-900 text-white pt-8 md:pt-6 pb-4 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 mb-16">
           {/* Brand Column */}
           <div className="lg:col-span-2 text-center md:text-left">
             <div className="flex justify-center md:justify-start">
-              <img
-                src={imgVector}
-                alt="TechTide Logo"
-                className="h-10 w-auto"
-              />
+              <Link to="/">
+                <img
+                  src={imgVector}
+                  alt="TechTide Logo"
+                  className="h-10 w-auto"
+                />
+              </Link>
             </div>
             <p className="text-gray-400 text-sm mt-6 max-w-md mx-auto md:mx-0 leading-relaxed">
               Building technology and investing in tomorrow's Pakistan. We
@@ -42,7 +51,14 @@ export function Footer() {
             {/* Social Links */}
             <div className="flex justify-center md:justify-start gap-4 mt-8">
               <a
-                href="https://linkedin.com"
+                href="mailto:techtidecorporate@gmail.com
+"
+                className="w-10 h-10 rounded-full bg-white/5 hover:bg-[#EA4335] flex items-center justify-center transition-all hover:-translate-y-1"
+              >
+                <FaEnvelope className="text-white w-4 h-4" />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/techtideco/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/5 hover:bg-[#453abc] flex items-center justify-center transition-all hover:-translate-y-1"
@@ -50,28 +66,12 @@ export function Footer() {
                 <FaLinkedinIn className="text-white w-4 h-4" />
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/techtidecorporatellp/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/5 hover:bg-[#c13584] flex items-center justify-center transition-all hover:-translate-y-1"
               >
                 <FaInstagram className="text-white w-4 h-4" />
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/5 hover:bg-[#1877f2] flex items-center justify-center transition-all hover:-translate-y-1"
-              >
-                <FaFacebookF className="text-white w-4 h-4" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/5 hover:bg-[#1da1f2] flex items-center justify-center transition-all hover:-translate-y-1"
-              >
-                <FaTwitter className="text-white w-4 h-4" />
               </a>
             </div>
           </div>
@@ -80,62 +80,109 @@ export function Footer() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:col-span-3 gap-8 text-left">
             <div>
               <h4 className="text-white font-poppins font-medium mb-6">
-                Company
+                Quick Links
               </h4>
               <ul className="space-y-4">
-                {footerLinks.company.map((link, index) => (
+                {footerLinks.quicklinks.map((link, index) => (
                   <li key={index}>
-                    <a
-                      href={`#${link.toLowerCase().replace(/\s+/g, "-")}`}
+                    <Link
+                      to={link.href}
                       className="text-gray-400 text-sm hover:text-white transition-colors"
                     >
-                      {link}
-                    </a>
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div>
+            {/* Services */}
+            <div className="flex flex-col">
               <h4 className="text-white font-poppins font-medium mb-6">
                 Services
               </h4>
-              <ul className="space-y-4">
-                {footerLinks.services.map((link, index) => (
-                  <li key={index}>
-                    <a
-                      href="#services"
-                      className="text-gray-400 text-sm hover:text-white transition-colors"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
+              <ul className="space-y-4 mb-6">
+                <li>
+                  <a
+                    href="/services/crm"
+                    className="text-gray-400 text-sm hover:text-white transition-colors"
+                  >
+                    CRM (Customer Management)
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/services/erp"
+                    className="text-gray-400 text-sm hover:text-white transition-colors"
+                  >
+                    ERP (Business Portal)
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/services/ecommerce"
+                    className="text-gray-400 text-sm hover:text-white transition-colors"
+                  >
+                    E-Commerce Solutions
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/services/hrms"
+                    className="text-gray-400 text-sm hover:text-white transition-colors"
+                  >
+                    HRMS (HR Management)
+                  </a>
+                </li>
               </ul>
+              <a
+                href="/services"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl border border-white/10 text-white text-sm font-medium hover:bg-white/5 transition-all w-fit"
+              >
+                <span>Explore More</span>
+                <FaArrowRight size={14} className="text-[#453abc]" />
+              </a>
             </div>
 
-            <div className="col-span-2 md:col-span-1">
+            {/* Contact Information */}
+            <div>
               <h4 className="text-white font-poppins font-medium mb-6">
-                Resources
+                Contact
               </h4>
               <ul className="space-y-4">
-                {footerLinks.resources.map((link, index) => (
-                  <li key={index}>
-                    <a
-                      href={`#${link.toLowerCase().replace(/\s+/g, "-")}`}
-                      className="text-gray-400 text-sm hover:text-white transition-colors"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
+                <li className="flex items-start gap-3">
+                  <FaEnvelope className="text-[#453abc] " />
+                  <a
+                    href="mailto:techtidecorporate@gmail.com"
+                    className="text-gray-400 text-sm hover:text-white transition-colors"
+                  >
+                    techtidecorporate@gmail.com
+                  </a>
+                </li>
+                <li className="flex items-start gap-3">
+                  <FaPhone className="text-[#453abc] mt-1" />
+                  <a
+                    href="tel:+923247991484"
+                    className="text-gray-400 text-sm hover:text-white transition-colors"
+                  >
+                    +92 324 7991484
+                  </a>
+                </li>
+                <li className="flex items-start gap-3">
+                  <FaMapMarkerAlt className="text-[#453abc] mt-1 flex-shrink-0" />
+                  <span className="text-gray-400 text-sm leading-relaxed">
+                    G3 heaven mall zaraar
+                    <br />
+                    shaheed road lahore
+                  </span>
+                </li>
               </ul>
             </div>
           </div>
         </div>
 
         {/* Newsletter Section */}
-        <div className="border-t border-white/5 pt-12 pb-12">
+        <div className="border-t border-white/5 py-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div className="text-center lg:text-left">
               <h3 className="text-xl font-poppins font-medium mb-2">
@@ -167,7 +214,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-gray-500 text-sm text-center">
-            © {new Date().getFullYear()} TechTide Co. All rights reserved.
+            © 2024 TechTideCo. All rights reserved.
           </p>
 
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">

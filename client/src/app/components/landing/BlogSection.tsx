@@ -4,10 +4,6 @@ import { ArrowRight } from "lucide-react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { blogAPI } from "@/api";
 import { BlogPost } from "@/types";
-import imgFrame30 from "@/assets/b326c6a3bb8e3c925df83d41d6e5c1c7d725008d.png";
-import imgFrame31 from "@/assets/bd700f8b8364ca740c0d1ed4d8651195e1c8eeec.png";
-import imgFrame32 from "@/assets/dbf7258643f1e9fa27cc8b1667f5043cbd288b6f.png";
-import imgFrame33 from "@/assets/2bd6066cc6d72c4ba93fb781b60de7c597b10245.png";
 
 export function BlogSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -31,7 +27,6 @@ export function BlogSection() {
     fetchBlogs();
   }, []);
 
-  const defaultImages = [imgFrame30, imgFrame31, imgFrame32, imgFrame33];
   // Different speeds for each column
   const slow = useSpring(useTransform(scrollYProgress, [0, 1], [0, -60]), {
     stiffness: 100,
@@ -49,7 +44,10 @@ export function BlogSection() {
   });
 
   return (
-    <section className="relative bg-white py-16 md:py-24 overflow-hidden">
+    <section
+      ref={containerRef}
+      className="relative bg-white py-16 md:pt-24 overflow-hidden"
+    >
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
           {/* LEFT TEXT */}
@@ -78,18 +76,11 @@ export function BlogSection() {
           </div>
 
           {/* RIGHT EDITORIAL LAYOUT - DESKTOP */}
-          <div
-            ref={containerRef}
-            className="hidden lg:flex lg:w-[62%] h-[110vh] gap-8"
-          >
+          <div className="relative hidden lg:flex lg:w-[62%] h-[110vh] gap-8">
             {/* LEFT — FEATURED */}
             {blogPosts[0] && (
               <motion.div style={{ y: slow }} className="w-48 h-72 mt-24">
-                <BlogCard
-                  blog={blogPosts[0]}
-                  variant="featured"
-                  defaultImage={defaultImages[0]}
-                />
+                <BlogCard blog={blogPosts[0]} variant="featured" />
               </motion.div>
             )}
 
@@ -99,12 +90,7 @@ export function BlogSection() {
               className="w-48 h-[90vh] flex flex-col justify-between"
             >
               {blogPosts.slice(1, 4).map((blog, idx) => (
-                <BlogCard
-                  key={blog._id}
-                  blog={blog}
-                  variant="medium"
-                  defaultImage={defaultImages[(idx + 1) % 4]}
-                />
+                <BlogCard key={blog._id} blog={blog} variant="medium" />
               ))}
             </motion.div>
 
@@ -114,12 +100,7 @@ export function BlogSection() {
               className="w-48 h-[70vh] flex flex-col gap-10 justify-between mt-24"
             >
               {blogPosts.slice(4, 6).map((blog, idx) => (
-                <BlogCard
-                  key={blog._id}
-                  blog={blog}
-                  variant="large"
-                  defaultImage={defaultImages[(idx + 4) % 4]}
-                />
+                <BlogCard key={blog._id} blog={blog} variant="large" />
               ))}
             </motion.div>
           </div>
@@ -128,11 +109,7 @@ export function BlogSection() {
           <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
             {blogPosts.slice(0, 4).map((blog, idx) => (
               <div key={blog._id} className="h-64 sm:h-72">
-                <BlogCard
-                  blog={blog}
-                  variant="medium"
-                  defaultImage={defaultImages[idx % 4]}
-                />
+                <BlogCard blog={blog} variant="mobile" />
               </div>
             ))}
           </div>
@@ -148,11 +125,13 @@ function BlogCard({
   defaultImage,
 }: {
   blog: any;
-  variant: "featured" | "medium" | "large";
+  variant: "featured" | "medium" | "large" | "mobile";
   defaultImage?: string;
 }) {
   const height =
-    variant === "featured"
+    variant === "mobile"
+      ? "h-full"
+      : variant === "featured"
       ? "h-[92%]" // adjusted ↓
       : variant === "large"
       ? "h-[52%]" // adjusted ↑

@@ -5,13 +5,30 @@ const serviceSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  shortDescription: {
+    type: String,
+    required: true
+  },
   description: {
     type: String,
     required: true
   },
+  image: {
+    type: String,
+    required: true
+  },
+  features: {
+    type: [String],
+    default: []
+  },
   icon: {
     type: String,
     default: ''
+  },
+  slug: {
+    type: String,
+    required: true,
+    unique: true
   },
   color: {
     type: String,
@@ -20,6 +37,16 @@ const serviceSchema = new mongoose.Schema({
   bgColor: {
     type: String,
     default: '#ffffff'
+  },
+  seoTitle: {
+    type: String
+  },
+  seoDescription: {
+    type: String
+  },
+  seoKeywords: {
+    type: [String],
+    default: []
   }
 }, { timestamps: true });
 

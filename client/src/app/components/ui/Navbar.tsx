@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import imgVector from "@/assets/brand-logo-dark.svg";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
   { href: "/services", label: "Services", isRoute: true },
@@ -42,15 +42,14 @@ export function Navbar() {
       animate={{
         backgroundColor: shouldBeTransparent
           ? "rgba(255, 255, 255, 0)"
-          : "rgba(255, 255, 255, 0.9)",
+          : "rgba(255, 255, 255, 0.95)",
         backdropFilter: shouldBeTransparent ? "blur(0px)" : "blur(12px)",
         boxShadow: shouldBeTransparent
           ? "0 0 0 rgba(0, 0, 0, 0)"
-          : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-        paddingTop: shouldBeTransparent ? "1.5rem" : "1rem",
-        paddingBottom: shouldBeTransparent ? "1.5rem" : "1rem",
+          : "0 10px 30px -10px rgba(0, 0, 0, 0.1)",
+        height: "80px",
       }}
-      transition={{ duration: 0.4, ease: "easeInOut" }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10"
     >
       <div className="flex-shrink-0">
@@ -127,48 +126,56 @@ export function Navbar() {
       </button>
 
       {/* Mobile Menu Overlay */}
-      <div
-        className={`fixed inset-0 top-[60px] md:top-[70px] bg-white z-40 lg:hidden transition-all duration-300 transform ${
-          isMobileMenuOpen
-            ? "translate-x-0 opacity-100"
-            : "translate-x-full opacity-0"
-        }`}
-      >
-        <div className="flex flex-col p-8 gap-6 h-full overflow-y-auto">
-          {navItems.map((item, index) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <Link
-                key={index}
-                to={item.href}
-                className={`text-2xl font-poppins font-medium p-2 transition-colors ${
-                  isActive ? "text-[#453abc]" : "text-gray-800"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-          <hr className="border-gray-100 my-4" />
-          <Link
-            to="/signin"
-            className="w-full py-4 rounded-xl text-center text-white font-poppins font-medium shadow-lg"
-            style={{
-              background:
-                "linear-gradient(95deg, rgb(69, 58, 188) 0%, rgb(96, 195, 227) 100%)",
-            }}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ type: "tween", duration: 0.3 }}
+            className="fixed inset-0 top-[80px] h-full z-40 lg:hidden"
           >
-            Sign in
-          </Link>
+            <div className="flex flex-col p-8 gap-6 bg-white h-[400px] overflow-y-auto pb-20">
+              {navItems.map((item, index) => {
+                const isActive = location.pathname === item.href;
+                return (
+                  <Link
+                    key={index}
+                    to={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`text-2xl font-poppins font-medium p-2 transition-colors ${
+                      isActive ? "text-[#453abc]" : "text-gray-800"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+              <hr className="border-gray-100 my-4" />
+              <Link
+                to="/signin"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full py-4 rounded-xl text-center text-white font-poppins font-medium shadow-lg"
+                style={{
+                  background:
+                    "linear-gradient(95deg, rgb(69, 58, 188) 0%, rgb(96, 195, 227) 100%)",
+                }}
+              >
+                Sign in
+              </Link>
 
-          <div className="mt-auto pt-8">
-            <p className="text-gray-400 text-sm mb-4">
-              Connecting you to the future of technology.
-            </p>
-            <div className="flex gap-4">{/* Social icons could go here */}</div>
-          </div>
-        </div>
-      </div>
+              <div className="mt-auto pt-8">
+                <p className="text-gray-400 text-sm mb-4">
+                  Connecting you to the future of technology.
+                </p>
+                <div className="flex gap-4">
+                  {/* Social icons could go here */}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 }

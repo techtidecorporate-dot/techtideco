@@ -1,8 +1,13 @@
 export function FloatingCTA() {
+  const openDrawer = () => {
+    window.dispatchEvent(new CustomEvent("open-partner-drawer"));
+  };
+
   return (
-    <div className="fixed right-0 top-1/2 -translate-y-1/2 z-50 h-[180px] w-[56px] flex items-center justify-center">
+    <div className="fixed -right-2 top-1/2 -translate-y-1/2 z-50 h-[180px] w-[56px] flex items-center justify-center">
       <div className="rotate-[270deg]">
         <button
+          onClick={openDrawer}
           className="
             relative px-5 py-2.5 
             rounded-tl-[22px] rounded-tr-[22px]

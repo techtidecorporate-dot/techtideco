@@ -1,12 +1,12 @@
 import heroVideo from "@/assets/hero.mp4";
-import imgPexelsDivinetechygirl from "@/assets/d2e42a0720e47063a35868106a8eab091f8f96ac.png";
-import { Navbar } from "../ui/Navbar";
 import { FloatingCTA } from "../ui/FloatingCTA";
+import { Navigate, Router, useNavigate } from "react-router-dom";
 
 export function HeroSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="relative h-screen min-h-screen w-full overflow-hidden bg-gray-900">
-      <Navbar />
       <FloatingCTA />
 
       {/* Background Video */}
@@ -17,7 +17,6 @@ export function HeroSection() {
           muted
           playsInline
           className="w-full h-full object-cover"
-          poster={imgPexelsDivinetechygirl}
         >
           <source src={heroVideo} type="video/mp4" />
         </video>
@@ -61,8 +60,9 @@ export function HeroSection() {
               backgroundImage:
                 "linear-gradient(93.1835deg, rgb(69, 58, 188) 0%, rgb(96, 195, 227) 103.41%)",
             }}
+            onClick={() => navigate("/services")}
           >
-            <span className="text-white font-medium">About Us</span>
+            <span className="text-white font-medium">Explore Services</span>
           </button>
         </div>
       </div>

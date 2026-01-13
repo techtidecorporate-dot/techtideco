@@ -73,7 +73,7 @@ export default function BlogManagement() {
     e.preventDefault();
     const payload = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
-      if (key !== "image") payload.append(key, value);
+      payload.append(key, value);
     });
     if (selectedFile) {
       payload.append("image", selectedFile);
@@ -392,25 +392,90 @@ export default function BlogManagement() {
                   <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">
                     Image
                   </label>
-                  <div className="flex items-center gap-4">
-                    {imagePreview && (
-                      <img
-                        src={
-                          imagePreview.startsWith("blob")
-                            ? imagePreview
-                            : `http://localhost:5000${imagePreview}`
-                        }
-                        alt="Preview"
-                        className="w-20 h-20 object-cover rounded-xl border border-white/10"
-                      />
+                  <div className="space-y-3">
+                    {/* Toggle between File Upload and URL */}
+                    <div className="flex gap-2 bg-white/5 p-1 rounded-lg">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData({ ...formData, image: "" });
+                          setSelectedFile(null);
+                        }}
+                        className={`flex-1 px-3 py-2 rounded-md text-xs font-medium transition-all ${
+                          !formData.image
+                            ? "bg-[#453abc] text-white"
+                            : "text-gray-400 hover:text-white"
+                        }`}
+                      >
+                        Upload File
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedFile(null);
+                          setImagePreview("");
+                        }}
+                        className={`flex-1 px-3 py-2 rounded-md text-xs font-medium transition-all ${
+                          formData.image && !selectedFile
+                            ? "bg-[#453abc] text-white"
+                            : "text-gray-400 hover:text-white"
+                        }`}
+                      >
+                        Image URL
+                      </button>
+                    </div>
+
+                    {/* File Upload */}
+                    {!formData.image && (
+                      <div className="flex items-center gap-4">
+                        {imagePreview && (
+                          <img
+                            src={
+                              imagePreview.startsWith("blob")
+                                ? imagePreview
+                                : `http://localhost:5000${imagePreview}`
+                            }
+                            alt="Preview"
+                            className="w-20 h-20 object-cover rounded-xl border border-white/10"
+                          />
+                        )}
+                        <input
+                          type="file"
+                          name="image"
+                          accept="image/*"
+                          onChange={handleChange}
+                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50 text-sm"
+                        />
+                      </div>
                     )}
-                    <input
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      onChange={handleChange}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50 text-sm"
-                    />
+
+                    {/* URL Input */}
+                    {(formData.image || (!selectedFile && !imagePreview)) && (
+                      <div className="space-y-2">
+                        <input
+                          type="url"
+                          value={formData.image}
+                          onChange={(e) => {
+                            setFormData({ ...formData, image: e.target.value });
+                            setImagePreview(e.target.value);
+                            setSelectedFile(null);
+                          }}
+                          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#453abc]/50 text-sm"
+                          placeholder="https://example.com/image.jpg"
+                        />
+                        {formData.image && (
+                          <img
+                            src={formData.image}
+                            alt="Preview"
+                            className="w-full h-32 object-cover rounded-xl border border-white/10"
+                            onError={(e) => {
+                              e.currentTarget.src = "";
+                              e.currentTarget.alt = "Invalid image URL";
+                            }}
+                          />
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="space-y-2">

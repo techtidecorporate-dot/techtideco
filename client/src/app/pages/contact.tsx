@@ -55,20 +55,20 @@ export default function ContactPage() {
     {
       icon: <Mail className="w-6 h-6" />,
       title: "Email Us",
-      content: "contact@techtide.co",
-      link: "mailto:contact@techtide.co",
+      content: "techtidecorporate@gmail.com",
+      link: "mailto:techtidecorporate@gmail.com",
     },
     {
       icon: <Phone className="w-6 h-6" />,
       title: "Call Us",
-      content: "+1 (555) 123-4567",
-      link: "tel:+15551234567",
+      content: "+92 324 7991484",
+      link: "tel:+92 324 7991484",
     },
     {
       icon: <MapPin className="w-6 h-6" />,
       title: "Visit Us",
-      content: "123 Tech Street, Silicon Valley, CA 94025",
-      link: "#",
+      content: "G3 heaven mall, zaraar shaheed road, lahore",
+      link: "https://www.google.com/maps/place/HEAVEN+MALL/@31.5488578,74.3987883,606m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3919055e3dbd05d5:0x6c7f09044264f7e!8m2!3d31.5488578!4d74.4013632!16s%2Fg%2F11hbfkzn6l?entry=ttu&g_ep=EgoyMDI2MDEwNy4wIKXMDSoASAFQAw%3D%3D",
     },
   ];
 
@@ -146,7 +146,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3.5 md:py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#453abc] focus:border-transparent transition-all font-inter text-sm"
-                    placeholder="John"
+                    placeholder="Enter your first name"
                   />
                 </div>
                 <div className="space-y-2">
@@ -160,7 +160,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3.5 md:py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#453abc] focus:border-transparent transition-all font-inter text-sm"
-                    placeholder="Doe"
+                    placeholder="Enter your last name"
                   />
                 </div>
               </div>
@@ -177,7 +177,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3.5 md:py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#453abc] focus:border-transparent transition-all font-inter text-sm"
-                    placeholder="john@example.com"
+                    placeholder="Enter your email"
                   />
                 </div>
                 <div className="space-y-2">
@@ -190,7 +190,7 @@ export default function ContactPage() {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-3.5 md:py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#453abc] focus:border-transparent transition-all font-inter text-sm"
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="Enter your phone number"
                   />
                 </div>
               </div>
@@ -266,19 +266,6 @@ export default function ContactPage() {
                     </h4>
                     <p className="text-[#6b7280] text-sm leading-relaxed">
                       Work with experienced professionals
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-5">
-                  <div className="w-12 h-12 rounded-xl bg-[#453abc]/5 flex items-center justify-center text-[#453abc] flex-shrink-0 shadow-sm">
-                    <Shield className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="font-poppins font-semibold text-[#191a23] mb-1">
-                      Proven Track Record
-                    </h4>
-                    <p className="text-[#6b7280] text-sm leading-relaxed">
-                      100+ successful projects delivered
                     </p>
                   </div>
                 </div>

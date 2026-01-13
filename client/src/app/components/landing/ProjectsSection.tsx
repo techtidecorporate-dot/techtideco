@@ -1,8 +1,6 @@
 import { ExternalLink } from "lucide-react";
-import imgFrame15 from "@/assets/80d61d17f2eedb3360eb75e42daf1c2edc16e351.png";
-import imgLinkedinLogo from "@/assets/5b20ff7d2c56b7b458e377fa7bd3ef1f75118fea.png";
-import imgGmailLogo from "@/assets/b350107bd00a655e6a6e60b806ac2ce72d6ac305.png";
-
+import imgNexusClinic from "@/assets/nexus.png";
+import imgRaynovaTech from "@/assets/raynova.png";
 interface ProjectCardProps {
   title: string;
   description: string;
@@ -21,7 +19,7 @@ function ProjectCard({
       <div className="relative h-64 overflow-hidden">
         <img
           alt={title}
-          className="w-full h-full object-cover transition-transform group-hover:scale-110"
+          className="w-full h-full object-conver transition-transform group-hover:scale-110"
           src={image}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -54,25 +52,50 @@ function ProjectCard({
 
 const projects = [
   {
-    title: "Momento",
+    title: "Nexus Clinic",
     description:
-      "Momento is a modern fashion e-commerce platform that celebrates individual style. The brand curates everyday essentials and statement pieces designed to empower customers to express themselves authentically, wherever life takes them.",
-    image: imgFrame15,
-    technologies: ["HTML", "CSS", "JavaScript", "Tailwind CSS", "GSAP"],
+      "Nexus Clinic is a full-scale MERN healthcare management system designed to connect patients, doctors, and clinic administrators. It offers secure authentication, appointment booking, telemedicine, medical record management, and role-based dashboards to streamline clinical operations.",
+    image: imgNexusClinic, // add your project image here
+    technologies: [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "JWT",
+      "Cloudinary",
+    ],
   },
   {
-    title: "FinTech Dashboard",
+    title: "RaynovaTech Website",
     description:
-      "A real-time financial analytics dashboard with smart reports, charts, and performance insights.",
-    image: imgFrame15,
-    technologies: ["Next.js", "TypeScript", "Chart.js", "Redis"],
+      "RaynovaTech is a modern corporate technology and solutions website showcasing innovative IT services, digital solutions, and enterprise-grade offerings. This project highlights responsive design, intuitive navigation, and engaging UI to present the brand effectively online.",
+    image: imgRaynovaTech, // replace with your image import
+    technologies: [
+      "React",
+      "Tailwind CSS",
+      "Responsive Web Design",
+      "SEO Optimization",
+      "JavaScript",
+      "UI/UX Design",
+    ],
   },
   {
-    title: "Healthcare Portal",
+    title: "SereNiva – Online Massage Services SPA",
     description:
-      "Secure patient management system with telemedicine and medical record handling.",
-    image: imgFrame15,
-    technologies: ["Vue.js", "Python", "MongoDB", "Docker"],
+      "SereNiva is a responsive Single Page Application (SPA) designed for online massage service booking. It features a smooth user experience for selecting massage services, browsing therapists, booking sessions, and accessing service details — all within an intuitive, modern frontend.",
+    image: imgRaynovaTech, // import your project image here
+    technologies: [
+      "React",
+      "Vite",
+      "JavaScript",
+      "Tailwind CSS",
+      "SPA Design",
+      "Responsive UI",
+      "React Router",
+    ],
   },
 ];
 

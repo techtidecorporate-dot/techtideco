@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
-import imgFrame34 from "@/assets/5991d38925f70f707e902dac1e2ab7475afb2167.png";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { serviceAPI } from "@/api";
+import { Service } from "@/types";
 
 interface ServiceCardProps {
   title: string;
@@ -29,39 +30,42 @@ function ServiceCard({ title, description, image }: ServiceCardProps) {
           {description}
         </p>
 
-        <button className="inline-flex items-center gap-2 text-[#453abc] text-sm font-medium group">
-          <span>Read More</span>
-          <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+        <button
+          onClick={() =>
+            window.dispatchEvent(new CustomEvent("open-partner-drawer"))
+          }
+          className="w-full py-2.5 rounded-lg text-white font-medium shadow-md transition-all hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 text-xs sm:text-sm mt-auto"
+          style={{
+            backgroundImage:
+              "linear-gradient(93.1835deg, rgb(69, 58, 188) 0%, rgb(96, 195, 227) 103.41%)",
+          }}
+        >
+          Get in touch
         </button>
       </div>
     </div>
   );
 }
 
-const services = [
-  {
-    title: "Web Development",
-    description:
-      "We create fast, secure, and responsive websites that help your business grow online with custom SEO-friendly solutions optimized for performance.",
-    image: imgFrame34,
-  },
-  {
-    title: "Mobile App Development",
-    description:
-      "Build powerful mobile applications for iOS and Android that deliver exceptional user experiences and drive engagement.",
-    image: imgFrame34,
-  },
-  {
-    title: "Digital Marketing",
-    description:
-      "Grow your online presence with strategic digital marketing campaigns that convert visitors into loyal customers.",
-    image: imgFrame34,
-  },
-];
-
 export function ServicesSection() {
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const { data } = await serviceAPI.getAll();
+        setServices(data);
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchServices();
+  }, []);
 
   /* 🔁 Auto slide */
   useEffect(() => {
@@ -151,37 +155,47 @@ export function ServicesSection() {
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        <AnimatePresence>
-          {services.map((service, index) => {
-            const position = getPosition(index);
-            // Dynamic x value based on viewport - using window.innerWidth might be tricky in SSR,
-            // but for responsive classes we can't easily change framer-motion x.
-            // Better to use percentages or a hook for width.
-            const xOffset =
-              position === "left" ? -280 : position === "right" ? 280 : 0;
-            const mobileXOffset =
-              position === "left" ? -160 : position === "right" ? 160 : 0;
+        {loading ? (
+          <Loader2 className="w-10 h-10 text-[#453abc] animate-spin" />
+        ) : (
+          <AnimatePresence>
+            {services.map((service, index) => {
+              const position = getPosition(index);
+              const xOffset =
+                position === "left" ? -280 : position === "right" ? 280 : 0;
+              const mobileXOffset =
+                position === "left" ? -160 : position === "right" ? 160 : 0;
 
-            return (
-              <motion.div
-                key={index}
-                className="absolute w-[280px] md:w-[350px]"
-                variants={variants}
-                animate={position}
-                transition={{ duration: 0.7, ease: "easeInOut" }}
-                style={{
-                  // Simple fallback for mobile x-offset
-                  x:
-                    typeof window !== "undefined" && window.innerWidth < 768
-                      ? mobileXOffset
-                      : xOffset,
-                }}
-              >
-                <ServiceCard {...service} />
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+              const getImageUrl = (path: string) => {
+                if (!path) return "";
+                if (path.startsWith("http")) return path;
+                return `http://localhost:5000${path}`;
+              };
+
+              return (
+                <motion.div
+                  key={service._id}
+                  className="absolute w-[280px] md:w-[350px]"
+                  variants={variants}
+                  animate={position}
+                  transition={{ duration: 0.7, ease: "easeInOut" }}
+                  style={{
+                    x:
+                      typeof window !== "undefined" && window.innerWidth < 768
+                        ? mobileXOffset
+                        : xOffset,
+                  }}
+                >
+                  <ServiceCard
+                    title={service.title}
+                    description={service.shortDescription}
+                    image={getImageUrl(service.image)}
+                  />
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        )}
 
         {/* Controls - Hidden on very small screens to avoid clutter if needed, or just smaller */}
         <div className="absolute inset-x-4 md:inset-x-10 flex justify-between pointer-events-none z-10">
