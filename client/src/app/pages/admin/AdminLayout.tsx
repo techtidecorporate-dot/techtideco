@@ -9,6 +9,7 @@ import {
   LogOut,
   LayoutDashboard,
   Box,
+  Handshake,
 } from "lucide-react";
 
 interface SidebarLinkProps {
@@ -60,6 +61,7 @@ export default function AdminLayout() {
     { to: "/admin/teams", icon: Users, label: "Teams" },
     { to: "/admin/blogs", icon: BookOpen, label: "Blogs" },
     { to: "/admin/services", icon: Box, label: "Services" },
+    { to: "/admin/partners", icon: Handshake, label: "Partners" },
     { to: "/admin/messages", icon: Mail, label: "Messages" },
   ];
 

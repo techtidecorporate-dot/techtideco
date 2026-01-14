@@ -100,3 +100,16 @@ export interface ContactMessage {
   status: 'new' | 'read' | 'replied';
   createdAt: string;
 }
+
+export interface PartnerRequest {
+  _id: string;
+  fullName: string;
+  email: string;
+  companyName?: string;
+  phone: string;
+  service: string;
+  description: string;
+  budget: string;
+  status: 'new' | 'contacted' | 'resolved';
+  createdAt: string;
+}

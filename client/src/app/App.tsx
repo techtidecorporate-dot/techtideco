@@ -24,6 +24,7 @@ import ContactMessages from "./pages/admin/ContactSubmissions";
 import UserManagement from "./pages/admin/Users";
 import JobApplications from "./pages/admin/Jobs";
 import JobPositions from "./pages/admin/JobPositions";
+import PartnerSubmissions from "./pages/admin/PartnerSubmissions";
 
 export default function App() {
   const location = useLocation();
@@ -65,6 +66,7 @@ export default function App() {
             <Route path="users" element={<UserManagement />} />
             <Route path="job-positions" element={<JobPositions />} />
             <Route path="jobs" element={<JobApplications />} />
+            <Route path="partners" element={<PartnerSubmissions />} />
           </Route>
         </Routes>
         <PartnerWithUsDrawer

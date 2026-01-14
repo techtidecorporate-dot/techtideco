@@ -1,6 +1,6 @@
 import axios from 'axios';
 export * from "@/types";
-import { User, TeamMember, BlogPost, Service, JobPosition, JobApplication, ContactMessage } from '@/types';
+import { User, TeamMember, BlogPost, Service, JobPosition, JobApplication, ContactMessage, PartnerRequest } from '@/types';
 
 
 const API_URL = 'http://localhost:5000/api';
@@ -80,7 +80,7 @@ export const contactAPI = {
 };
 
 export const partnerAPI = {
-  getAll: () => api.get('/partners'),
+  getAll: () => api.get<PartnerRequest[]>('/partners'),
   create: (data: any) => api.post('/partners', data),
 };
 
