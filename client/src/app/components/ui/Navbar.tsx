@@ -55,9 +55,12 @@ export function Navbar() {
       <div className="flex-shrink-0">
         <Link to="/" className="flex items-center">
           <img
-            alt="Techtide Company Logo"
-            className="h-8 md:h-10 w-auto"
             src={imgVector}
+            className="h-8 md:h-10 w-auto"
+            alt="TechTide Corporate LLP Logo – TechTide Co. Software & Digital Solutions Company"
+            title="TechTide Corporate LLP | TechTide Co."
+            loading="eager"
+            decoding="async"
           />
         </Link>
       </div>

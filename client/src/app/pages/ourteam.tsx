@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Code, TrendingUp, Users, Loader2 } from "lucide-react";
-import LeaderCard from "@/app/components/team/LeaderCard";
-import TeamMemberCard from "@/app/components/team/TeamMemberCard";
+import LeaderCard from "@/app/pages/team/LeaderCard";
+import TeamMemberCard from "@/app/pages/team/TeamMemberCard";
 import { teamAPI, TeamMember } from "@/api";
 
 const TeamOption1 = () => {

@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import { Footer } from "./components/landing/Footer";
+import { Footer } from "./components/ui/Footer";
 import { Navbar } from "./components/ui/Navbar";
 import LandingPage from "./pages/landing";
 import TeamPage from "./pages/ourteam";

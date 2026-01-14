@@ -10,6 +10,7 @@ const gradients = [
 ];
 
 import { FloatingCTA } from "../components/ui/FloatingCTA";
+import { Link } from "react-router-dom";
 
 export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
@@ -76,18 +77,23 @@ export default function ServicesPage() {
                 className="bg-white rounded-[1rem] md:rounded-[1rem] border border-transparent shadow-[0_15px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_40px_80px_rgba(0,0,0,0.08)] hover:border-[#453abc]/10 transition-all duration-500 overflow-hidden group flex flex-col"
               >
                 {service.image && (
-                  <div className="h-52 overflow-hidden">
+                  <Link
+                    to={`/services/${service.slug}`}
+                    className="h-52 overflow-hidden block"
+                  >
                     <img
                       src={getImageUrl(service.image)}
                       alt={service.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                  </div>
+                  </Link>
                 )}
                 <div className="p-4">
-                  <h3 className="text-xl md:text-2xl font-poppins font-medium text-[#191a23] mb-3  group-hover:text-[#453abc] transition-colors">
-                    {service.title}
-                  </h3>
+                  <Link to={`/services/${service.slug}`}>
+                    <h3 className="text-xl md:text-2xl font-poppins font-medium text-[#191a23] mb-3  group-hover:text-[#453abc] transition-colors">
+                      {service.title}
+                    </h3>
+                  </Link>
 
                   <p className="text-[#6b7280] text-sm md:text-base leading-relaxed font-inter mb-6">
                     {service.shortDescription}
