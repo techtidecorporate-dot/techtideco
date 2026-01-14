@@ -1,14 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { contactAPI, ContactMessage } from "@/api";
-import {
-  Mail,
-  Trash2,
-  Search,
-  CheckCircle,
-  Clock,
-  User,
-  MessageSquare,
-} from "lucide-react";
+import { Trash2, Search, CheckCircle, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ContactMessages() {

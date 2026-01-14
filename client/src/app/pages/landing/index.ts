@@ -1,9 +1,0 @@
-export { HeroSection } from "./HeroSection";
-export { ServicesSection } from "./ServicesSection";
-export { VisionMissionSection } from "./VisionMissionSection";
-export { BlogSection } from "./BlogSection";
-export { ProjectsSection } from "./ProjectsSection";
-export { TeamSection } from "./testimonials";
-export { LeadershipSection } from "./LeadershipSection";
-export { SupportSection } from "./SupportSection";
-export { Footer } from "../../components/ui/Footer";

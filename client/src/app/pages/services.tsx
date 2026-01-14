@@ -3,12 +3,6 @@ import { serviceAPI } from "@/api";
 import { Service } from "@/types";
 import { Loader2 } from "lucide-react";
 
-const gradients = [
-  "from-[#453abc] to-[#60c3e3]",
-  "from-[#60c3e3] to-[#453abc]",
-  "from-[#453abc] via-[#60c3e3] to-[#453abc]",
-];
-
 import { FloatingCTA } from "../components/ui/FloatingCTA";
 import { Link } from "react-router-dom";
 
@@ -71,7 +65,7 @@ export default function ServicesPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {services.map((service, index) => (
+            {services.map((service) => (
               <div
                 key={service._id}
                 className="bg-white rounded-[1rem] md:rounded-[1rem] border border-transparent shadow-[0_15px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_40px_80px_rgba(0,0,0,0.08)] hover:border-[#453abc]/10 transition-all duration-500 overflow-hidden group flex flex-col"

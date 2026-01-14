@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { jobAPI, JobApplication } from "@/api";
 import {
   CheckCircle,
@@ -9,7 +9,8 @@ import {
   Mail,
   Phone,
   User,
-  ExternalLink,
+  Eye,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -17,6 +18,7 @@ export default function JobApplications() {
   const [jobs, setJobs] = useState<JobApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedResume, setSelectedResume] = useState<string | null>(null);
 
   useEffect(() => {
     fetchJobs();
@@ -31,6 +33,12 @@ export default function JobApplications() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getFileUrl = (path: string | undefined) => {
+    if (!path) return "";
+    if (path.startsWith("http")) return path;
+    return `http://localhost:5000${path}`;
   };
 
   const handleStatusUpdate = async (id: string, status: string) => {
@@ -177,15 +185,13 @@ export default function JobApplications() {
                   </div>
 
                   {job.resume && (
-                    <a
-                      href={job.resume}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => setSelectedResume(getFileUrl(job.resume))}
                       className="flex items-center gap-1 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg text-sm transition-all"
                     >
-                      <ExternalLink size={14} />
+                      <Eye size={14} />
                       View CV
-                    </a>
+                    </button>
                   )}
                 </div>
               </div>
@@ -197,6 +203,31 @@ export default function JobApplications() {
           ))
         )}
       </div>
+
+      {/* Resume Viewer Modal */}
+      {selectedResume && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-[#16161a] border border-white/10 w-full max-w-5xl h-[85vh] rounded-2xl flex flex-col shadow-2xl overflow-hidden">
+            <div className="p-4 flex items-center justify-between border-b border-white/10">
+              <h3 className="text-xl font-bold text-white">Resume Viewer</h3>
+              <button
+                onClick={() => setSelectedResume(null)}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="flex-1 bg-white relative">
+              <iframe
+                src={selectedResume}
+                className="w-full h-full"
+                title="Resume PDF"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

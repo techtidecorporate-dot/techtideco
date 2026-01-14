@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mail, MapPin, Phone, Send, Shield, Users, Zap } from "lucide-react";
+import { Mail, MapPin, Phone, Send, Users, Zap } from "lucide-react";
 import { contactAPI } from "@/api";
 
 import { toast } from "sonner";

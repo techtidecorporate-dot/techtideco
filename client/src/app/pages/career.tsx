@@ -11,7 +11,7 @@ import {
 
 import { useState, useEffect } from "react";
 import { jobPositionAPI, JobPosition } from "@/api";
-import { JobApplicationForm } from "./career/JobApplicationForm";
+import { JobApplicationForm } from "../components/career/JobApplicationForm";
 import { toast } from "sonner";
 
 export default function CareersPage() {

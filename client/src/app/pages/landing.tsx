@@ -1,12 +1,14 @@
 import React from "react";
-import { HeroSection } from "./landing/HeroSection";
-import VisionMissionSection from "./landing/VisionMissionSection";
-import { ServicesSection } from "./landing/ServicesSection";
-import { ProjectsSection } from "./landing/ProjectsSection";
-import { TeamSection } from "./landing/testimonials";
-import { LeadershipSection } from "./landing/LeadershipSection";
-import { BlogSection } from "./landing/BlogSection";
-import { SupportSection } from "./landing/SupportSection";
+import {
+  HeroSection,
+  VisionMissionSection,
+  ServicesSection,
+  ProjectsSection,
+  TeamSection,
+  LeadershipSection,
+  BlogSection,
+  SupportSection,
+} from "../components/landing";
 
 const LandingPage: React.FC = () => {
   return (

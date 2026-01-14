@@ -7,7 +7,6 @@ import {
   Phone,
   ChevronDown,
   MessageSquare,
-  DollarSign,
   ArrowRight,
   CheckCircle2,
 } from "lucide-react";
