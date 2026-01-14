@@ -42,6 +42,12 @@ export default function ContactPage() {
     }
   };
 
+  const handleCopyEmail = (e: React.MouseEvent, content: string) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(content);
+    toast.success("Email copied to clipboard!");
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -105,6 +111,11 @@ export default function ContactPage() {
             <a
               key={index}
               href={info.link}
+              onClick={(e) => {
+                if (info.title === "Email Us") {
+                  handleCopyEmail(e, info.content);
+                }
+              }}
               className="bg-white rounded-2xl border border-gray-100 p-8 shadow-md hover:shadow-xl transition-all group"
             >
               <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-[#453abc] to-[#60c3e3] flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform shadow-lg">

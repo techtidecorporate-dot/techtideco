@@ -26,6 +26,7 @@ export const authAPI = {
   register: (userData: any) => api.post('/auth/register', userData),
   getProfile: () => api.get<User>('/auth/profile'),
   getUsers: () => api.get<User[]>('/auth/users'),
+  createUser: (userData: any) => api.post('/auth/users', userData),
   deleteUser: (id: string) => api.delete(`/auth/users/${id}`),
 };
 

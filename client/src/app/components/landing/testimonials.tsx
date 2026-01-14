@@ -1,48 +1,47 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ReviewAhmad from "@/assets/ahmad.jpeg";
-
+import ReviewImage1 from "@/assets/review 1.png";
+import ReviewImage2 from "@/assets/review 2.png";
+import ReviewImage3 from "@/assets/review 3.png";
+import ReviewImage4 from "@/assets/review 4.png";
+import ReviewImage5 from "@/assets/review5.png";
 export function TeamSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isManual, setIsManual] = useState(false);
 
   const reviews = [
     {
-      name: "Romeena De Silva",
+      name: "Ethan Rhodes",
       role: "Founder, Janet Cosmetics",
-      image:
-        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80",
+      image: ReviewImage1,
       message:
         "Without any doubt, I highly recommend TechTide Co. as a professional technology partner. Their expertise in web development and digital strategy delivered exceptional results for our brand.",
     },
     {
-      name: "Ahmad Khan",
+      name: "Julianne Ross",
       role: "Software Engineer",
-      image: ReviewAhmad,
+      image: ReviewImage2,
       message:
         "Working with TechTide Corporate was an excellent experience. The team clearly understood complex requirements and delivered scalable, high-quality solutions with outstanding technical precision.",
     },
     {
-      name: "Sarah Johnson",
+      name: "Konradas Česnulis",
       role: "Frontend Developer",
-      image:
-        "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=400&q=80",
+      image: ReviewImage3,
       message:
         "TechTide Co. impressed me with their professionalism, responsiveness, and attention to detail. The collaboration was smooth, efficient, and focused on delivering real business value.",
     },
     {
       name: "David Kim",
       role: "Product Manager",
-      image:
-        "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=400&q=80",
+      image: ReviewImage4,
       message:
         "The TechTide Corporate team played a key role in scaling our product by building a modern, intuitive interface that significantly improved user engagement and customer satisfaction.",
     },
     {
       name: "Lisa Anderson",
       role: "DevOps Engineer",
-      image:
-        "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&q=80",
+      image: ReviewImage5,
       message:
         "TechTide Co. proved to be a reliable and knowledgeable partner. Their transparent communication and proactive approach ensured smooth delivery across every phase of our project.",
     },

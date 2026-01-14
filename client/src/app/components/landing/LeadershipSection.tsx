@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
+import { Mail, Linkedin, Instagram } from "lucide-react";
 import imgNadir from "@/assets/nadir.png";
 import imgMoazzam from "@/assets/Moazzam.png";
 import imgSajid from "@/assets/sajideen.png";
@@ -13,6 +15,11 @@ const leaders = [
     image: imgNadir,
     message:
       "As CEO and Founder of TechTide Corporate, I lead our vision to deliver innovative, scalable technology solutions while empowering businesses and nurturing Pakistan’s digital talent ecosystem.",
+    social: {
+      linkedin: "https://www.linkedin.com/in/muhammad-nadir-202186383/",
+      gmail: "ceo@techtidecorporate.com",
+      instagram: "https://www.instagram.com/m.nadirdurrani/",
+    },
   },
   {
     name: "Muhammad Moazzam",
@@ -20,6 +27,11 @@ const leaders = [
     image: imgMoazzam,
     message:
       "As CFO at TechTide Co., I oversee financial strategy, budgeting, and risk management to ensure sustainable growth, profitability, and long-term financial stability across all operations.",
+    social: {
+      gmail: "moazzam2526@gmail.com",
+      linkedin: "https://www.linkedin.com/in/muhammad-moazzam-366bb238b/",
+      instagram: "#",
+    },
   },
   {
     name: "Sajideen Hassan",
@@ -27,6 +39,11 @@ const leaders = [
     image: imgSajid,
     message:
       "As CTO of TechTide Corporate, I lead our engineering strategy by building secure, high-performance architectures and driving innovation that powers reliable, future-ready digital products.",
+    social: {
+      gmail: "sajideenhassan12@gmail.com",
+      linkedin: "https://www.linkedin.com/in/sajideen-hassan-79875428a/",
+      instagram: "https://www.instagram.com/notshigri/",
+    },
   },
   {
     name: "Shamin Gull",
@@ -34,6 +51,11 @@ const leaders = [
     image: imgShamin,
     message:
       "As COO at TechTide Co., I manage company-wide operations by aligning teams, optimizing workflows, and ensuring efficient project execution with consistent quality and accountability.",
+    social: {
+      gmail: "Khanshamin512@gmail.com",
+      linkedin: "https://www.linkedin.com/in/shamin-gul-khan/",
+      instagram: "https://www.instagram.com/gul.shamin.khan/",
+    },
   },
   {
     name: "Muhammad Ammar",
@@ -41,6 +63,11 @@ const leaders = [
     image: imgAmmar,
     message:
       "As Digital Marketing Head at TechTide Corporate, I lead performance-driven marketing strategies that enhance brand visibility, generate demand, and expand our global digital presence.",
+    social: {
+      gmail: "ammarhaider75@gmail.com",
+      linkedin: "https://www.linkedin.com/in/ammarhaider75/",
+      instagram: "https://www.instagram.com/ammarhaider_here/",
+    },
   },
 ];
 
@@ -54,6 +81,12 @@ export function LeadershipSection() {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleEmailClick = (e: React.MouseEvent, email: string) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(email);
+    toast.success("Email copied to clipboard!");
+  };
 
   return (
     <section
@@ -94,6 +127,34 @@ export function LeadershipSection() {
               "
             </span>
           </div>
+
+          {/* Social Links */}
+          <div className="flex justify-center lg:justify-start gap-4">
+            <a
+              href="#"
+              onClick={(e) =>
+                handleEmailClick(e, leaders[current].social.gmail)
+              }
+              className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-[#453abc] hover:text-white transition-all duration-300"
+              aria-label="Gmail"
+            >
+              <Mail className="w-5 h-5" />
+            </a>
+            <a
+              href={leaders[current].social.linkedin}
+              className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-[#0077b5] hover:text-white transition-all duration-300"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
+            <a
+              href={leaders[current].social.instagram}
+              className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-[#E1306C] hover:text-white transition-all duration-300"
+              aria-label="Instagram"
+            >
+              <Instagram className="w-5 h-5" />
+            </a>
+          </div>
         </div>
 
         {/* Image Section */}
@@ -109,7 +170,10 @@ export function LeadershipSection() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.5 }}
-                className="w-auto h-full max-h-[350px] object-contain drop-shadow-xl"
+                onClick={() =>
+                  setCurrent((prev) => (prev + 1) % leaders.length)
+                }
+                className="w-auto h-full max-h-[350px] object-contain drop-shadow-xl cursor-pointer"
               />
             </AnimatePresence>
           </div>
@@ -178,7 +242,8 @@ export function LeadershipSection() {
                     duration: 0.8,
                     ease: "easeInOut",
                   }}
-                  className="absolute top-0 left-0 w-full h-full object-contain object-top pointer-events-none"
+                  onClick={() => setCurrent(index)}
+                  className="absolute top-0 left-0 w-full h-full object-contain object-top cursor-pointer"
                 />
               );
             })}

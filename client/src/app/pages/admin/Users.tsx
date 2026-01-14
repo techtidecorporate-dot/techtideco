@@ -1,12 +1,20 @@
 import { useState, useEffect } from "react";
 import { authAPI, User } from "@/api";
-import { Shield, ShieldCheck, Search, Trash2 } from "lucide-react";
+import { Shield, ShieldCheck, Search, Trash2, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 
 export default function UserManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "user",
+  });
 
   useEffect(() => {
     fetchUsers();
@@ -35,6 +43,22 @@ export default function UserManagement() {
     }
   };
 
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreating(true);
+    try {
+      await authAPI.createUser(formData);
+      toast.success("User created successfully");
+      setShowModal(false);
+      setFormData({ name: "", email: "", password: "", role: "user" });
+      fetchUsers();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to create user");
+    } finally {
+      setCreating(false);
+    }
+  };
+
   const filteredUsers = users.filter(
     (u) =>
       u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -50,6 +74,13 @@ export default function UserManagement() {
             Total registered users: {users.length}
           </p>
         </div>
+        <button
+          onClick={() => setShowModal(true)}
+          className="bg-gradient-to-r from-[#453abc] to-[#60c3e3] text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium hover:shadow-lg hover:shadow-[#453abc]/20 transition-all active:scale-95"
+        >
+          <Plus size={20} />
+          Add User
+        </button>
       </div>
 
       <div className="relative">
@@ -135,6 +166,103 @@ export default function UserManagement() {
           </tbody>
         </table>
       </div>
+
+      {/* Add User Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#16161a] border border-white/10 rounded-2xl w-full max-w-md p-6 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute right-4 top-4 text-gray-400 hover:text-white transition-colors"
+            >
+              <X size={20} />
+            </button>
+            <h3 className="text-xl font-bold mb-6">Add New User</h3>
+            <form onSubmit={handleCreate} className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-300">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#453abc]/50 text-white"
+                  placeholder="John Doe"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-300">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#453abc]/50 text-white"
+                  placeholder="john@example.com"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-300">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#453abc]/50 text-white"
+                  placeholder="••••••••"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-300">
+                  Role
+                </label>
+                <select
+                  value={formData.role}
+                  onChange={(e) =>
+                    setFormData({ ...formData, role: e.target.value })
+                  }
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#453abc]/50 text-white"
+                >
+                  <option value="user" className="bg-[#16161a]">
+                    Standard User
+                  </option>
+                  <option value="admin" className="bg-[#16161a]">
+                    Administrator
+                  </option>
+                </select>
+              </div>
+              <div className="pt-4 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={creating}
+                  className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-[#453abc] to-[#60c3e3] text-white font-medium hover:shadow-lg hover:shadow-[#453abc]/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {creating ? "Creating..." : "Create User"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

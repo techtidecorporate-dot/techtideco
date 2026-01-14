@@ -8,6 +8,7 @@ import {
   FaMapMarkerAlt,
   FaArrowRight,
 } from "react-icons/fa";
+import { toast } from "sonner";
 
 const footerLinks = {
   quicklinks: [
@@ -26,6 +27,12 @@ const footerLinks = {
 };
 
 export function Footer() {
+  const handleCopyEmail = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigator.clipboard.writeText("techtidecorporate@gmail.com");
+    toast.success("Email copied to clipboard!");
+  };
+
   return (
     <footer className="bg-gray-900 text-white pt-8 md:pt-6 pb-4 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-8">
@@ -51,8 +58,8 @@ export function Footer() {
             {/* Social Links */}
             <div className="flex justify-center md:justify-start gap-4 mt-8">
               <a
-                href="mailto:techtidecorporate@gmail.com
-"
+                href="#"
+                onClick={handleCopyEmail}
                 className="w-10 h-10 rounded-full bg-white/5 hover:bg-[#EA4335] flex items-center justify-center transition-all hover:-translate-y-1"
               >
                 <FaEnvelope className="text-white w-4 h-4" />
@@ -153,7 +160,8 @@ export function Footer() {
                 <li className="flex items-start gap-3">
                   <FaEnvelope className="text-[#453abc] " />
                   <a
-                    href="mailto:techtidecorporate@gmail.com"
+                    href="#"
+                    onClick={handleCopyEmail}
                     className="text-gray-400 text-sm hover:text-white transition-colors"
                   >
                     techtidecorporate@gmail.com
